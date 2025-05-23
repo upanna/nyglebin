@@ -7,17 +7,38 @@
   padding: 0;
 }
 
+/* CSS Variables (Custom Properties) for easy color changes */
+:root {
+  --primary-color: #4267B2; /* Facebook Blue */
+  --secondary-color: #1877f2; /* Lighter Blue for links/buttons */
+  --accent-color: #007bff; /* Edit button blue */
+  --delete-color: #dc3545; /* Delete button red */
+  --text-dark: #050505;
+  --text-medium: #333;
+  --text-light: #555;
+  --bg-light: #f0f2f5;
+  --bg-card: white;
+  --border-light: #eee;
+  --border-medium: #ccc;
+
+  /* >>> Customize your main text color here <<< */
+  --main-text-color: var(--text-dark); /* Default to dark text */
+  /* Example: If you want red text, change to: --main-text-color: red; */
+  /* Example: If you want dark green text, change to: --main-text-color: #2F4F4F; */
+}
+
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f2f5;
-  color: #050505;
+  background: var(--bg-light);
+  color: var(--main-text-color); /* Main text color controlled by variable */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 header {
-  background-color: #4267B2;
+  background-color: var(--primary-color);
   color: white;
   padding: 15px 20px;
   display: flex;
@@ -69,10 +90,9 @@ header nav ul li a:hover {
 #auth-modal button,
 #send-message-btn,
 #profile-header button,
-#post-titles-list button, /* Added for postlist if needed */
-#private-message-input-area button /* Added for message page */
+#private-message-input-area button
 {
-  background-color: #1877f2;
+  background-color: var(--secondary-color);
   border: none;
   color: white;
   font-weight: 600;
@@ -87,10 +107,9 @@ header nav ul li a:hover {
 #auth-modal button:hover,
 #send-message-btn:hover,
 #profile-header button:hover,
-#post-titles-list button:hover,
 #private-message-input-area button:hover
 {
-  background-color: #0f54c2;
+  background-color: #0f54c2; /* Darker blue on hover */
 }
 
 #auth-section input {
@@ -103,13 +122,13 @@ header nav ul li a:hover {
 
 /* Card Style */
 .card {
-    background: white;
+    background: var(--bg-card);
     padding: 15px 20px;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
 }
 
-/* Updated Main Layout with Grid */
+/* Main Layout with Grid */
 main.main-layout {
   flex-grow: 1;
   display: grid;
@@ -147,7 +166,7 @@ main.main-layout {
   gap: 10px;
   margin-bottom: 10px; /* Margin already in card */
   /* Re-applied card styles */
-  background: white;
+  background: var(--bg-card);
   padding: 10px 15px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
@@ -158,7 +177,7 @@ main.main-layout {
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #4267b2;
+  border: 2px solid var(--primary-color);
 }
 
 #user-info span {
@@ -168,7 +187,7 @@ main.main-layout {
 
 #profiles-list h3, #right-nav h3, #post-titles-list h2, #chat-container h2, #user-contacts h3, #chat-window h2 {
     margin-bottom: 15px;
-    color: #4267B2;
+    color: var(--primary-color); /* Headings in primary color */
 }
 #all-users, #titles-container, #contact-list {
     max-height: 400px; /* Limit height for scroll */
@@ -180,7 +199,7 @@ main.main-layout {
     align-items: center;
     gap: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -199,11 +218,11 @@ main.main-layout {
 }
 .user-item span {
     font-weight: 500;
-    color: #333;
+    color: var(--text-medium); /* User names in medium text color */
 }
 .user-item span.current-user {
     font-weight: 700;
-    color: #4267B2;
+    color: var(--primary-color);
 }
 
 /* Right Sidebar Quick Links */
@@ -216,19 +235,19 @@ main.main-layout {
 }
 #right-nav a {
     text-decoration: none;
-    color: #1877f2;
+    color: var(--secondary-color);
     font-weight: 500;
     transition: color 0.2s ease;
 }
 #right-nav a:hover {
-    color: #0f54c2;
+    color: #0f54c2; /* Darker blue on hover */
     text-decoration: underline;
 }
 
 
 #post-create textarea {
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-medium);
   border-radius: 10px;
   resize: vertical;
   min-height: 80px;
@@ -238,10 +257,11 @@ main.main-layout {
   margin-bottom: 12px;
   outline: none;
   transition: border-color 0.2s ease;
+  color: var(--main-text-color); /* Text area input color */
 }
 
 #post-create textarea:focus {
-  border-color: #4267b2;
+  border-color: var(--primary-color);
 }
 
 #posts {
@@ -252,14 +272,14 @@ main.main-layout {
 }
 #posts h2 {
     margin-bottom: 20px;
-    color: #4267B2;
+    color: var(--primary-color);
 }
 
 .post {
-  background: white; /* Already handled by .card */
-  border-radius: 15px; /* Already handled by .card */
-  padding: 15px 20px; /* Already handled by .card */
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08); /* Already handled by .card */
+  background: var(--bg-card);
+  border-radius: 15px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
 }
 
 .post-header {
@@ -274,13 +294,13 @@ main.main-layout {
   height: 44px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #4267b2;
+  border: 2px solid var(--primary-color);
 }
 
 .post-header .username {
   font-weight: 600;
   font-size: 1.05rem;
-  color: #2d2d2d;
+  color: var(--text-dark); /* Post author name color */
   cursor: pointer;
 }
 .post-header .username:hover {
@@ -291,7 +311,7 @@ main.main-layout {
   font-size: 1rem;
   margin-bottom: 12px;
   white-space: pre-wrap;
-  color: #222;
+  color: var(--main-text-color); /* Post content text color */
 }
 
 .post-actions {
@@ -299,14 +319,17 @@ main.main-layout {
   align-items: center;
   gap: 15px;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-light); /* Like count/actions text color */
   user-select: none;
+  border-top: 1px solid var(--border-light);
+  padding-top: 10px;
+  margin-top: 10px;
 }
 
 .post-actions button {
   background: transparent;
   border: none;
-  color: #4267b2;
+  color: var(--primary-color);
   cursor: pointer;
   font-weight: 600;
   display: flex;
@@ -316,15 +339,50 @@ main.main-layout {
 }
 
 .post-actions button:hover {
-  color: #0f54c2;
+  color: #0f54c2; /* Darker primary color on hover */
 }
 
 .post-actions .like-count {
   font-weight: 600;
-  color: #1877f2;
+  color: var(--secondary-color);
 }
 
-/* Modal Styles (unchanged) */
+/* Post Owner Actions (Edit/Delete Buttons) */
+.post-owner-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;
+    margin-bottom: 10px; /* Space between owner actions and post content */
+}
+
+.post-owner-actions button {
+    background-color: #6c757d; /* Grey for general actions (default) */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background-color 0.25s ease;
+}
+
+.post-owner-actions button.edit-btn {
+    background-color: var(--accent-color); /* Blue for Edit */
+}
+.post-owner-actions button.edit-btn:hover {
+    background-color: #0056b3; /* Darker accent on hover */
+}
+
+.post-owner-actions button.delete-btn {
+    background-color: var(--delete-color); /* Red for Delete */
+}
+.post-owner-actions button.delete-btn:hover {
+    background-color: #c82333; /* Darker delete color on hover */
+}
+
+
+/* Modal Styles */
 #auth-modal, .modal {
   position: fixed;
   inset: 0;
@@ -340,7 +398,7 @@ main.main-layout {
 }
 
 #auth-modal .modal-container, .modal-content {
-  background: white;
+  background: var(--bg-card);
   padding: 25px 30px;
   border-radius: 20px;
   width: 320px;
@@ -352,7 +410,7 @@ main.main-layout {
 #auth-modal h2, .modal-content h3 {
   margin-bottom: 15px;
   text-align: center;
-  color: #4267b2;
+  color: var(--primary-color);
 }
 
 #auth-modal label, .modal-content label {
@@ -360,7 +418,7 @@ main.main-layout {
   font-size: 0.9rem;
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--text-medium);
 }
 
 #auth-modal input[type="email"],
@@ -368,18 +426,19 @@ main.main-layout {
 #auth-modal input[type="text"],
 .modal-content input[type="text"],
 .modal-content textarea,
-#message-input, /* Added for chat */
-#private-message-input /* Added for private chat */
+#message-input,
+#private-message-input
 {
   width: 100%;
   padding: 8px 12px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-medium);
   border-radius: 8px;
   font-family: inherit;
   font-size: 1rem;
   outline: none;
   transition: border-color 0.2s ease;
+  color: var(--main-text-color); /* Input text color */
 }
 .modal-content textarea {
     min-height: 60px;
@@ -388,13 +447,13 @@ main.main-layout {
 
 #auth-modal input:focus, .modal-content input:focus, .modal-content textarea:focus,
 #message-input:focus, #private-message-input:focus {
-  border-color: #4267b2;
+  border-color: var(--primary-color);
 }
 
 #auth-modal button, .modal-content button {
   margin-top: 10px;
   width: 100%;
-  background-color: #1877f2;
+  background-color: var(--secondary-color);
 }
 
 #auth-modal .modal-close, .modal-content .close-button {
@@ -404,7 +463,7 @@ main.main-layout {
   background: transparent;
   border: none;
   font-size: 1.4rem;
-  color: #555;
+  color: var(--text-light);
   cursor: pointer;
   font-weight: 700;
   user-select: none;
@@ -412,14 +471,14 @@ main.main-layout {
 }
 
 #auth-modal .modal-close:hover, .modal-content .close-button:hover {
-  color: #222;
+  color: var(--text-dark);
 }
 
 #switch-auth {
   margin-top: 10px;
   text-align: center;
   font-size: 0.9rem;
-  color: #4267b2;
+  color: var(--primary-color);
   cursor: pointer;
   user-select: none;
   font-weight: 600;
@@ -428,11 +487,11 @@ main.main-layout {
   text-decoration: underline;
 }
 
-/* Profile Page Specific (unchanged) */
+/* Profile Page Specific */
 #profile-header {
     text-align: center;
     padding: 20px;
-    background: #fff;
+    background: var(--bg-card);
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -442,15 +501,15 @@ main.main-layout {
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    border: 5px solid #4267B2;
+    border: 5px solid var(--primary-color);
 }
 #profile-header h2 {
     margin-top: 10px;
-    color: #4267B2;
+    color: var(--primary-color);
     margin-bottom: 5px;
 }
 #profile-header p {
-    color: #555;
+    color: var(--text-light); /* Profile bio text color */
     margin-bottom: 15px;
 }
 #user-posts {
@@ -460,12 +519,12 @@ main.main-layout {
 }
 #user-posts h2 {
     margin-bottom: 20px;
-    color: #4267B2;
+    color: var(--primary-color);
 }
 
 /* Chat Page Specific */
 #chat-container {
-    background: #fff;
+    background: var(--bg-card);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     padding: 20px;
@@ -475,17 +534,18 @@ main.main-layout {
 }
 #chat-container h2 {
     margin-bottom: 15px;
-    color: #4267B2;
+    color: var(--primary-color);
 }
-#messages, #private-messages { /* Added for private chat */
+#messages, #private-messages {
     height: 400px;
     overflow-y: scroll;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-light);
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
+    color: var(--main-text-color); /* Message text color */
 }
 .message {
     margin-bottom: 8px;
@@ -495,17 +555,17 @@ main.main-layout {
     word-wrap: break-word;
 }
 .message.mine {
-    background-color: #dcf8c6;
+    background-color: #dcf8c6; /* Light green for own messages */
     align-self: flex-end;
 }
 .message.other {
-    background-color: #e0e0e0;
+    background-color: #e0e0e0; /* Light grey for other messages */
     align-self: flex-start;
 }
 .message .sender {
     font-weight: bold;
     font-size: 0.9em;
-    color: #555;
+    color: var(--text-light); /* Sender name color in chat */
     margin-bottom: 4px;
 }
 .message .sender img {
@@ -517,19 +577,20 @@ main.main-layout {
     vertical-align: middle;
     border: 1px solid #ddd;
 }
-#message-input-area, #private-message-input-area { /* Added for private chat */
+#message-input-area, #private-message-input-area {
     display: flex;
     gap: 10px;
 }
-#message-input, #private-message-input { /* Added for private chat */
+#message-input, #private-message-input {
     flex-grow: 1;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-medium);
     border-radius: 5px;
+    color: var(--main-text-color); /* Chat input text color */
 }
-#send-message-btn, #send-private-message-btn { /* Added for private chat */
+#send-message-btn, #send-private-message-btn {
     padding: 10px 15px;
-    background-color: #4267B2;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 5px;
@@ -543,17 +604,17 @@ main.main-layout {
 }
 #post-titles-list li {
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
 }
 #post-titles-list li:last-child {
     border-bottom: none;
 }
 #post-titles-list li a {
     text-decoration: none;
-    color: #1877f2;
+    color: var(--secondary-color); /* Link color for titles */
     font-weight: 500;
     font-size: 1.1em;
-    display: block; /* Make the whole area clickable */
+    display: block;
     transition: color 0.2s ease;
 }
 #post-titles-list li a:hover {
@@ -562,14 +623,14 @@ main.main-layout {
 }
 .post-title-meta {
     font-size: 0.85em;
-    color: #777;
+    color: var(--text-light); /* Meta info color */
     margin-top: 5px;
 }
 
 /* Message Page Layout */
 main.message-layout {
-    grid-template-columns: 1fr 2fr; /* Left (Contacts), Right (Chat Window) */
-    max-width: 1000px; /* Adjust max-width for message page */
+    grid-template-columns: 1fr 2fr;
+    max-width: 1000px;
 }
 .message-sidebar {
     grid-column: 1 / 2;
@@ -578,7 +639,7 @@ main.message-layout {
     grid-column: 2 / 3;
 }
 #user-contacts {
-    height: 100%; /* Fill height */
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -591,12 +652,12 @@ main.message-layout {
     align-items: center;
     gap: 10px;
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 .contact-item:hover, .contact-item.active {
-    background-color: #e6f0ff;
+    background-color: #e6f0ff; /* Light blue for active contact */
 }
 .contact-item img {
     width: 40px;
@@ -607,7 +668,7 @@ main.message-layout {
 }
 .contact-item span {
     font-weight: 600;
-    color: #333;
+    color: var(--text-medium); /* Contact name color */
 }
 #chat-window {
     display: flex;
@@ -617,18 +678,19 @@ main.message-layout {
 #current-chat-user-name {
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--primary-color);
 }
 #private-messages {
     flex-grow: 1;
-    min-height: 200px; /* Ensure some height even if no messages */
+    min-height: 200px;
 }
 #private-message-input-area button {
-    margin-bottom: 0; /* Override default button margin */
+    margin-bottom: 0;
 }
 
 
-/* Debug message style (unchanged) */
+/* Debug message style */
 .debug-msg {
   background: #ffeeba;
   color: #856404;
@@ -643,15 +705,15 @@ main.message-layout {
 }
 
 /* Responsive */
-@media (max-width: 992px) { /* Adjust for medium screens */
+@media (max-width: 992px) {
     main.main-layout {
-        grid-template-columns: 1fr 2fr; /* Hide right sidebar on medium */
+        grid-template-columns: 1fr 2fr;
     }
     .right-sidebar {
-        display: none; /* Hide right sidebar */
+        display: none;
     }
     main.message-layout {
-        grid-template-columns: 1fr; /* Stack on smaller screens */
+        grid-template-columns: 1fr;
     }
     .message-sidebar {
         grid-column: 1 / -1;
@@ -661,17 +723,17 @@ main.message-layout {
     }
 }
 
-@media (max-width: 768px) { /* Adjust for small screens */
+@media (max-width: 768px) {
     main.main-layout {
-        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+        grid-template-columns: 1fr;
         margin: 10px;
-        padding: 0; /* Remove padding for small screens */
+        padding: 0;
     }
     .left-sidebar {
-        grid-column: 1 / -1; /* Full width */
+        grid-column: 1 / -1;
     }
     .center-content {
-        grid-column: 1 / -1; /* Full width */
+        grid-column: 1 / -1;
     }
     header {
         flex-direction: column;
