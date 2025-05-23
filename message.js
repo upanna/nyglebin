@@ -1,226 +1,126 @@
 // message.js
-// Firebase instances and helper functions (auth, db, debugLog) are globally available.
+// ... (existing imports and definitions) ...
 
-const userContactsList = document.getElementById('contact-list');
 const chatWindow = document.getElementById('chat-window');
-const currentChatUserName = document.getElementById('current-chat-user-name');
-const privateMessagesContainer = document.getElementById('private-messages');
+const privateMessagesDiv = document.getElementById('private-messages');
 const privateMessageInput = document.getElementById('private-message-input');
 const sendPrivateMessageBtn = document.getElementById('send-private-message-btn');
-const btnLogoutMessage = document.getElementById('btn-logout-message');
-const userDisplayMessage = document.getElementById('user-display-message');
-const debugMsgMessage = document.getElementById('debug-msg-message');
-const myProfileLink = document.getElementById('my-profile-link');
+const currentChatUserNameEl = document.getElementById('current-chat-user-name');
+const contactListDiv = document.getElementById('contact-list');
 
-let currentChatPartnerId = null;
-let currentChatUnsubscribe = null; // For private chat listener
+let currentChatUserId = null;
+let unsubscribeFromMessages = null;
 
-// Logout
-btnLogoutMessage.addEventListener('click', () => {
-    auth.signOut().then(() => {
-        window.location.href = 'index.html';
-    }).catch(error => {
-        debugLog('Logout error: ' + error.message, 'debug-msg-message');
-        console.error('Logout error:', error);
-    });
-});
+// ... (existing functions like fetchUserProfile, fetchUsers, loadPrivateChat) ...
 
-// Ensure the page only loads for authenticated users
-auth.onAuthStateChanged(user => {
-    if (user) {
-        userDisplayMessage.textContent = user.displayName || user.email;
-        btnLogoutMessage.style.display = 'inline-block';
-        myProfileLink.href = `profile.html?uid=${user.uid}`;
-        loadContacts();
-    } else {
-        chatWindow.style.display = 'none'; // Hide chat window if not logged in
-        debugMsgMessage.style.display = 'block';
-        debugMsgMessage.textContent = 'Please log in to view your messages.';
-        setTimeout(() => {
-            if (!auth.currentUser) {
-                window.location.href = 'index.html';
+// New: Function to render a single private message with edit/delete options
+function renderPrivateMessage(message, currentUserUid, currentChattingWithUid) {
+    const messageEl = document.createElement('div');
+    messageEl.className = `message ${message.senderUid === currentUserUid ? 'mine' : 'other'}`;
+    messageEl.id = `private-msg-${message.id}`;
+
+    const senderInfo = document.createElement('div');
+    senderInfo.className = 'sender';
+    const senderImg = document.createElement('img');
+    senderImg.src = message.senderPhoto || 'https://i.pravatar.cc/30?u=' + (message.senderUid || message.senderName);
+    senderImg.alt = 'Profile Photo';
+    const senderName = document.createElement('span');
+    senderName.textContent = message.senderName || 'Anonymous';
+    senderInfo.appendChild(senderImg);
+    senderInfo.appendChild(senderName);
+    messageEl.appendChild(senderInfo);
+
+    const messageTextEl = document.createElement('p');
+    messageTextEl.textContent = message.text;
+    messageEl.appendChild(messageTextEl);
+
+    // Edit/Delete buttons (only for the sender of this message)
+    if (message.senderUid === currentUserUid) {
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'message-actions'; // Reuse message-actions CSS
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-message-btn';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', () => {
+            const newText = prompt('Edit your message:', message.text);
+            if (newText !== null && newText.trim() !== message.text.trim()) {
+                const chatId = [currentUserUid, currentChattingWithUid].sort().join('_');
+                db.collection('chats').doc(chatId).collection('messages').doc(message.id).update({
+                    text: newText.trim(),
+                    edited: true, // Optional: add an 'edited' flag
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp() // Update timestamp on edit
+                }).then(() => {
+                    debugLog('Private message updated successfully!', 'debug-msg-private');
+                }).catch(error => {
+                    alert('Error updating private message: ' + error.message);
+                    debugLog('Private message update error: ' + error.message, 'debug-msg-private');
+                    console.error('Error updating private message:', error);
+                });
             }
-        }, 3000);
-    }
-});
+        });
 
-sendPrivateMessageBtn.addEventListener('click', sendPrivateMessage);
-privateMessageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && !sendPrivateMessageBtn.disabled) {
-        e.preventDefault();
-        sendPrivateMessage();
-    }
-});
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-message-btn';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this message?')) {
+                const chatId = [currentUserUid, currentChattingWithUid].sort().join('_');
+                db.collection('chats').doc(chatId).collection('messages').doc(message.id).delete().then(() => {
+                    debugLog('Private message deleted successfully!', 'debug-msg-private');
+                }).catch(error => {
+                    alert('Error deleting private message: ' + error.message);
+                    debugLog('Private message deletion error: ' + error.message, 'debug-msg-private');
+                    console.error('Error deleting private message:', error);
+                });
+            }
+        });
 
-async function loadContacts() {
-    userContactsList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Loading contacts...</p>';
+        actionsDiv.appendChild(editBtn);
+        actionsDiv.appendChild(deleteBtn);
+        messageEl.appendChild(actionsDiv);
+    }
+
+    privateMessagesDiv.appendChild(messageEl);
+    privateMessagesDiv.scrollTop = privateMessagesDiv.scrollHeight;
+}
+
+
+// Make sure loadPrivateChat calls renderPrivateMessage with the correct parameters
+async function loadPrivateChat(chatWithUid, chatWithUserName) {
+    if (unsubscribeFromMessages) {
+        unsubscribeFromMessages();
+    }
+    currentChatUserId = chatWithUid; // Keep this for sending new messages
+    currentChatUserNameEl.textContent = chatWithUserName;
+    chatWindow.style.display = 'flex';
+    privateMessagesDiv.innerHTML = '';
+
     const currentUser = auth.currentUser;
     if (!currentUser) {
-        debugLog('No current user to load contacts.', 'debug-msg-message');
+        debugLog('User not logged in to view private chat.', 'debug-msg-private');
         return;
     }
 
-    db.collection('users').orderBy('displayName', 'asc').onSnapshot({
-        next: (snapshot) => {
-            userContactsList.innerHTML = '';
-            if (snapshot.empty) {
-                userContactsList.innerHTML = '<p style="text-align: center; color: #666;">No other members found.</p>';
-                return;
-            }
+    const chatId = [currentUser.uid, chatWithUid].sort().join('_');
+
+    debugLog(`Loading chat with: ${chatWithUserName} (Chat ID: ${chatId})`, 'debug-msg-private');
+
+    unsubscribeFromMessages = db.collection('chats').doc(chatId).collection('messages')
+        .orderBy('timestamp')
+        .limit(100)
+        .onSnapshot(snapshot => {
+            privateMessagesDiv.innerHTML = '';
             snapshot.forEach(doc => {
-                const contactData = doc.data();
-                const contactId = doc.id;
-
-                if (contactId === currentUser.uid) { // Don't list self in contacts
-                    return;
-                }
-
-                const contactItem = document.createElement('div');
-                contactItem.className = 'contact-item';
-                if (contactId === currentChatPartnerId) {
-                    contactItem.classList.add('active'); // Highlight active chat
-                }
-                contactItem.dataset.userId = contactId;
-                contactItem.onclick = () => selectContact(contactId, contactData.displayName, contactData.photoURL);
-
-                const contactImg = document.createElement('img');
-                contactImg.src = contactData.photoURL || 'https://i.pravatar.cc/40?u=' + contactId;
-                contactImg.alt = contactData.displayName + ' profile photo';
-
-                const contactNameSpan = document.createElement('span');
-                contactNameSpan.textContent = contactData.displayName || 'Unknown User';
-
-                contactItem.appendChild(contactImg);
-                contactItem.appendChild(contactNameSpan);
-                userContactsList.appendChild(contactItem);
+                const message = { id: doc.id, ...doc.data() };
+                // Pass both currentUser.uid and the UID of the person we are chatting with
+                renderPrivateMessage(message, currentUser.uid, chatWithUid);
             });
-            debugLog(snapshot.size - 1 + ' contacts loaded.', 'debug-msg-message');
-        },
-        error: (err) => {
-            userContactsList.innerHTML = '<p style="text-align: center; color: red;">Failed to load contacts.</p>';
-            debugLog('Error loading contacts: ' + err.message, 'debug-msg-message');
-            console.error('Error loading contacts:', err);
-        }
-    });
-}
-
-function selectContact(userId, userName, userPhoto) {
-    if (currentChatUnsubscribe) {
-        currentChatUnsubscribe(); // Unsubscribe from previous chat
-    }
-
-    currentChatPartnerId = userId;
-    currentChatUserName.textContent = `Chat with ${userName}`;
-    chatWindow.style.display = 'flex'; // Show chat window
-    privateMessageInput.disabled = false;
-    sendPrivateMessageBtn.disabled = false;
-
-    // Highlight active contact in list
-    document.querySelectorAll('.contact-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.userId === userId) {
-            item.classList.add('active');
-        }
-    });
-
-    loadPrivateMessages(userId, userName, userPhoto);
-}
-
-function getChatId(uid1, uid2) {
-    // Ensure consistent chat ID regardless of which user initiates
-    return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
-}
-
-function loadPrivateMessages(partnerId, partnerName, partnerPhoto) {
-    privateMessagesContainer.innerHTML = '<p style="text-align:center; color:#666; font-style: italic;">Loading messages...</p>';
-    const currentUser = auth.currentUser;
-    const chatId = getChatId(currentUser.uid, partnerId);
-
-    currentChatUnsubscribe = db.collection('chats').doc(chatId).collection('messages')
-        .orderBy('createdAt', 'asc').limitToLast(50).onSnapshot({
-            next: (snapshot) => {
-                privateMessagesContainer.innerHTML = '';
-                if (snapshot.empty) {
-                    privateMessagesContainer.innerHTML = `<p style="text-align:center; color:#666;">No messages with ${partnerName} yet. Say hello!</p>`;
-                }
-                snapshot.forEach(doc => {
-                    const message = doc.data();
-                    renderPrivateMessage(message, currentUser.uid);
-                });
-                privateMessagesContainer.scrollTop = privateMessagesContainer.scrollHeight;
-                debugLog(`Loaded ${snapshot.size} private messages for chat ID: ${chatId}.`, 'debug-msg-message');
-            },
-            error: (err) => {
-                privateMessagesContainer.innerHTML = '<p style="text-align:center; color:red;">Failed to load messages.</p>';
-                debugLog('Error loading private messages: ' + err.message, 'debug-msg-message');
-                console.error('Error loading private messages:', err);
-            }
+            privateMessagesDiv.scrollTop = privateMessagesDiv.scrollHeight;
+        }, error => {
+            debugLog('Error listening to private messages: ' + error.message, 'debug-msg-private');
+            console.error('Error listening to private messages:', error);
         });
 }
 
-async function sendPrivateMessage() {
-    const user = auth.currentUser;
-    if (!user || !currentChatPartnerId) {
-        alert('Please select a contact to send a message.');
-        debugLog('Attempted to send private message without recipient.', 'debug-msg-message');
-        return;
-    }
-
-    const messageText = privateMessageInput.value.trim();
-    if (messageText === '') return;
-
-    sendPrivateMessageBtn.disabled = true;
-
-    try {
-        const userDoc = await db.collection('users').doc(user.uid).get();
-        let userDisplayName = user.displayName || user.email.split('@')[0];
-        let userPhotoURL = user.photoURL || 'https://i.pravatar.cc/48?u=' + user.uid;
-
-        if (userDoc.exists) {
-            const userData = userDoc.data();
-            userDisplayName = userData.displayName || userDisplayName;
-            userPhotoURL = userData.photoURL || userPhotoURL;
-        }
-
-        const chatId = getChatId(user.uid, currentChatPartnerId);
-        await db.collection('chats').doc(chatId).collection('messages').add({
-            text: messageText,
-            senderId: user.uid,
-            senderName: userDisplayName,
-            senderPhoto: userPhotoURL,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        privateMessageInput.value = '';
-    } catch (error) {
-        alert('Error sending message: ' + error.message);
-        debugLog('Error sending private message: ' + error.message, 'debug-msg-message');
-        console.error('Error sending private message:', error);
-    } finally {
-        sendPrivateMessageBtn.disabled = false;
-    }
-}
-
-function renderPrivateMessage(message, currentUserId) {
-    const messageEl = document.createElement('div');
-    messageEl.className = 'message ' + (message.senderId === currentUserId ? 'mine' : 'other');
-
-    const senderInfoEl = document.createElement('div');
-    senderInfoEl.className = 'sender';
-
-    const senderImg = document.createElement('img');
-    senderImg.src = message.senderPhoto || 'https://i.pravatar.cc/30?u=' + message.senderId;
-    senderImg.alt = message.senderName + ' profile photo';
-    
-    const senderNameSpan = document.createElement('span');
-    senderNameSpan.textContent = message.senderName || 'Anonymous';
-    
-    senderInfoEl.appendChild(senderImg);
-    senderInfoEl.appendChild(senderNameSpan);
-
-    const messageTextEl = document.createElement('div');
-    messageTextEl.textContent = message.text;
-
-    messageEl.appendChild(senderInfoEl);
-    messageEl.appendChild(messageTextEl);
-    privateMessagesContainer.appendChild(messageEl);
-}
+// ... (rest of your existing message.js code including sendPrivateMessageBtn logic) ...

@@ -85,12 +85,14 @@ header nav ul li a:hover {
   gap: 10px;
 }
 
+/* Reusable Button Style */
 #auth-section button,
 #post-create button,
 #auth-modal button,
 #send-message-btn,
 #profile-header button,
-#private-message-input-area button
+#private-message-input-area button,
+#clear-chat-btn /* New: Clear Chat Button */
 {
   background-color: var(--secondary-color);
   border: none;
@@ -107,7 +109,8 @@ header nav ul li a:hover {
 #auth-modal button:hover,
 #send-message-btn:hover,
 #profile-header button:hover,
-#private-message-input-area button:hover
+#private-message-input-area button:hover,
+#clear-chat-btn:hover /* New: Clear Chat Button */
 {
   background-color: #0f54c2; /* Darker blue on hover */
 }
@@ -553,6 +556,7 @@ main.main-layout {
     border-radius: 15px;
     max-width: 70%;
     word-wrap: break-word;
+    position: relative; /* For actions positioning */
 }
 .message.mine {
     background-color: #dcf8c6; /* Light green for own messages */
@@ -567,6 +571,8 @@ main.main-layout {
     font-size: 0.9em;
     color: var(--text-light); /* Sender name color in chat */
     margin-bottom: 4px;
+    display: flex; /* For image and name alignment */
+    align-items: center;
 }
 .message .sender img {
     width: 30px;
@@ -596,6 +602,43 @@ main.main-layout {
     border-radius: 5px;
     cursor: pointer;
 }
+
+/* New: Message actions for chatroom AND private messages */
+.message-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+    /* Default to right alignment, will be flex-end for .mine */
+    font-size: 0.75rem;
+}
+.message.mine .message-actions {
+    justify-content: flex-end; /* Align to the right for "mine" messages */
+}
+.message.other .message-actions {
+    /* If you want to show for others too, align to the left */
+    justify-content: flex-start;
+}
+
+.message-actions button {
+    background: none;
+    border: none;
+    color: var(--secondary-color); /* Blue color for message actions */
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+.message-actions button.edit-message-btn:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+.message-actions button.delete-message-btn {
+    color: var(--delete-color); /* Red for delete */
+}
+.message-actions button.delete-message-btn:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
 
 /* Postlist Specific */
 #post-titles-list ul {
