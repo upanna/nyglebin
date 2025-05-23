@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageBook - Messages</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>PageBook</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a id="my-profile-link" href="profile.html">Profile</a></li>
+                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="postlist.html">Postlist</a></li>
+                <li><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="auth-section">
+            <span id="user-display-message"></span>
+            <button id="btn-logout-message">Logout</button>
+        </div>
+    </header>
+
+    <main class="main-layout message-layout">
+        <aside class="left-sidebar message-sidebar">
+            <section id="debug-msg-message" class="debug-msg" style="display: none;"></section>
+            <section id="user-contacts" class="card">
+                <h3>My Contacts</h3>
+                <div id="contact-list">
+                    <p style="text-align: center; color: #666; font-style: italic;">Loading contacts...</p>
+                </div>
+            </section>
+        </aside>
+
+        <div class="center-content message-content">
+            <section id="chat-window" class="card" style="display:none;">
+                <h2 id="current-chat-user-name">Select a contact to chat</h2>
+                <div id="private-messages">
+                    </div>
+                <div id="private-message-input-area">
+                    <input type="text" id="private-message-input" placeholder="Type a message..." disabled />
+                    <button id="send-private-message-btn" disabled>Send</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 PageBook. All rights reserved.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="message.js"></script>
+</body>
+</html>

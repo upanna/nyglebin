@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageBook - Chatroom</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>PageBook</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a id="my-profile-link" href="profile.html">Profile</a></li>
+                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="postlist.html">Postlist</a></li>
+                <li><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="auth-section">
+            <span id="user-display-chat"></span>
+            <button id="btn-logout-chat">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="debug-msg-chat" class="debug-msg" style="display: none;"></section>
+
+        <div id="chat-container" class="card" style="display:none;"> <h2>General Chat</h2>
+            <div id="messages">
+                </div>
+            <div id="message-input-area">
+                <input type="text" id="message-input" placeholder="Type a message..." />
+                <button id="send-message-btn">Send</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 PageBook. All rights reserved.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PageBook - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>PageBook</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a id="my-profile-link" href="profile.html">Profile</a></li>
+        <li><a href="chat.html">Chatroom</a></li>
+        <li><a href="postlist.html">Postlist</a></li>
+        <li><a href="message.html">Message</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div id="auth-section">
+      <span id="user-display"></span>
+      <button id="btn-login">Login</button>
+      <button id="btn-logout" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <aside class="left-sidebar">
+      <section id="debug-msg" class="debug-msg" style="display: none;"></section>
+      <section id="user-info" style="display:none;">
+        <img id="user-photo" alt="User Photo" />
+        <span id="user-name"></span>
+      </section>
+
+      <section id="profiles-list" class="card">
+        <h3>Members</h3>
+        <div id="all-users">
+          <p style="text-align: center; color: #666; font-style: italic;">Loading members...</p>
+        </div>
+      </section>
+    </aside>
+
+    <div class="center-content">
+      <section id="post-create" class="card" style="display:none;">
+        <h3>Create New Post</h3>
+        <textarea id="post-text" placeholder="What's on your mind? (Photo, Article, Poem, History, Story...)"></textarea>
+        <button id="btn-post">Post</button>
+      </section>
+
+      <section id="posts" class="card">
+        <h2>Recent Posts</h2>
+        </section>
+    </div>
+
+    <aside class="right-sidebar">
+      <section id="right-nav" class="card">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="postlist.html">Postlist (All Titles)</a></li>
+          <li><a href="about.html">About PageBook</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </section>
+      </aside>
+  </main>
+
+  <div id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="modal-container">
+      <button class="modal-close" aria-label="Close">&times;</button>
+      <h2 id="auth-title">Login</h2>
+      <form id="auth-form">
+        <label for="email-input">Email</label>
+        <input type="email" id="email-input" required autocomplete="username" />
+        <label for="password-input">Password</label>
+        <input type="password" id="password-input" required autocomplete="current-password" />
+        <div id="name-field-container" style="display:none;">
+            <label for="name-input">Display Name</label>
+            <input type="text" id="name-input" autocomplete="name" />
+        </div>
+        <button type="submit" id="auth-submit">Login</button>
+      </form>
+      <div id="switch-auth">Don't have an account? Sign Up</div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

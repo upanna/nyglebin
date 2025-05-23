@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageBook - Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>PageBook</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a id="my-profile-link" href="profile.html">Profile</a></li>
+                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="postlist.html">Postlist</a></li>
+                <li><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="auth-section">
+            <span id="user-display-profile"></span>
+            <button id="btn-logout-profile">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="debug-msg-profile" class="debug-msg" style="display: none;"></section>
+
+        <section id="profile-header" class="card">
+            <img id="profile-photo" src="https://i.pravatar.cc/150?u=default" alt="Profile Photo">
+            <h2 id="profile-name">Loading Profile...</h2>
+            <p id="profile-bio">No bio available.</p>
+            <button id="edit-profile-btn" style="display:none;">Edit Profile</button>
+            
+            <div id="edit-profile-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h3>Edit Your Profile</h3>
+                    <label for="edit-display-name">Display Name:</label>
+                    <input type="text" id="edit-display-name" />
+                    <label for="edit-bio">Bio:</label>
+                    <textarea id="edit-bio"></textarea>
+                    <button id="save-profile-btn">Save Changes</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="user-posts" class="card">
+            <h2>Posts by <span id="posts-by-user-name"></span></h2>
+            </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 PageBook. All rights reserved.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>
