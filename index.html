@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PageBook - Home</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <title>Upanna-Home</title>
+  <link rel="stylesheet" href="style.css"> </head>
 <body>
   <header>
-    <h1>PageBook</h1>
+    <h1>Upanna</h1>
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
@@ -33,6 +32,7 @@
       <section id="user-info" style="display:none;">
         <img id="user-photo" alt="User Photo" />
         <span id="user-name"></span>
+        <button id="edit-profile-btn" style="display:none;">Edit Profile</button>
       </section>
 
       <section id="profiles-list" class="card">
@@ -47,12 +47,13 @@
       <section id="post-create" class="card" style="display:none;">
         <h3>Create New Post</h3>
         <textarea id="post-text" placeholder="What's on your mind? (Photo, Article, Poem, History, Story...)"></textarea>
+        <input type="file" id="post-image-input" accept="image/*" style="margin-top: 10px;">
         <button id="btn-post">Post</button>
       </section>
 
       <section id="posts" class="card">
         <h2>Recent Posts</h2>
-        </section>
+      </section>
     </div>
 
     <aside class="right-sidebar">
@@ -64,7 +65,7 @@
           <li><a href="contact.html">Contact Us</a></li>
         </ul>
       </section>
-      </aside>
+    </aside>
   </main>
 
   <div id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
@@ -77,10 +78,11 @@
         <label for="password-input">Password</label>
         <input type="password" id="password-input" required autocomplete="current-password" />
         <div id="name-field-container" style="display:none;">
-            <label for="name-input">Display Name</label>
-            <input type="text" id="name-input" autocomplete="name" />
+          <label for="name-input">Display Name</label>
+          <input type="text" id="name-input" autocomplete="name" />
         </div>
         <button type="submit" id="auth-submit">Login</button>
+        <p id="auth-error-msg" style="color: red;"></p>
       </form>
       <div id="switch-auth">Don't have an account? Sign Up</div>
     </div>
@@ -89,7 +91,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
-</body>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+  <script src="js/config.js"></script>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/chat.js"></script> <script src="js/message.js"></script> </body>
 </html>
