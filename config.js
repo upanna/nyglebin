@@ -114,9 +114,61 @@ function renderPost(post, containerElement, authInstance, dbInstance) {
 
     actionsEl.appendChild(likeBtn);
 
+    // --- Start: Add Edit and Delete Buttons ---
+    if (currentUser && currentUser.uid === post.uid) { // Only show for the post owner
+        const ownerActionsEl = document.createElement('div');
+        ownerActionsEl.className = 'post-owner-actions';
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-btn';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', () => {
+            // Implement Edit functionality: show a modal/textarea with current post content
+            // For simplicity, we'll use a prompt first, then you can expand to a modal.
+            const newText = prompt('Edit your post:', post.text);
+            if (newText !== null && newText.trim() !== post.text.trim()) {
+                dbInstance.collection('posts').doc(post.id).update({
+                    text: newText.trim(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() // Add an update timestamp
+                }).then(() => {
+                    debugLog('Post updated successfully!', 'debug-msg');
+                }).catch(error => {
+                    alert('Error updating post: ' + error.message);
+                    debugLog('Post update error: ' + error.message, 'debug-msg');
+                    console.error('Error updating post:', error);
+                });
+            }
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this post?')) {
+                dbInstance.collection('posts').doc(post.id).delete().then(() => {
+                    debugLog('Post deleted successfully!', 'debug-msg');
+                }).catch(error => {
+                    alert('Error deleting post: ' + error.message);
+                    debugLog('Post delete error: ' + error.message, 'debug-msg');
+                    console.error('Error deleting post:', error);
+                });
+            }
+        });
+
+        ownerActionsEl.appendChild(editBtn);
+        ownerActionsEl.appendChild(deleteBtn);
+        postEl.appendChild(ownerActionsEl); // Add owner actions to the post element
+    }
+    // --- End: Add Edit and Delete Buttons ---
+
     postEl.appendChild(headerEl);
     postEl.appendChild(contentEl);
     postEl.appendChild(actionsEl);
 
+    // Append to container after all elements are added to postEl
+    // If you are rendering in a section (like index.html or profile.html), you might want to insert at the top
+    // For general reuse, appending is fine.
+    // However, for the main feed, you usually want new posts at the top, so clear and re-render or prepend.
+    // The current `loadPosts` (in app.js) clears and re-renders, so append is okay.
     containerElement.appendChild(postEl);
 }
