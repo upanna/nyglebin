@@ -1,13 +1,15 @@
 // config.js
 // This file holds your Firebase configuration
 const firebaseConfig = {
+
   apiKey: "AIzaSyDWaUMeurndWJXtWV5T5VR_psJrhPT3j1w",
+
   authDomain: "pagebook-d8147.firebaseapp.com",
   projectId: "pagebook-d8147",
   storageBucket: "pagebook-d8147.firebasestorage.app",
   messagingSenderId: "552581115998",
-  appId: "1:552581115998:web:cb8f6b63516b2c824d44cf",
-  measurementId: "G-1SCBH9NN00"
+  appId: "1:552581115998:web:d7efe9e8502eca064d44cf",
+  measurementId: "G-6CHHSFTD3P"
 };
 
 // Initialize Firebase once and export the instances
