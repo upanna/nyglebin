@@ -1,154 +1,4 @@
-/* General Body and Container Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f2f5; /* Light grey background */
-    color: #1c1e21; /* Dark grey text */
-    line-height: 1.6;
-}
-
-.main-layout {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    gap: 20px; /* Space between columns */
-    max-width: 1200px; /* Max width for the entire layout */
-    margin: 20px auto;
-}
-
-.homepage-layout {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr; /* Left, Main, Right ratio */
-    gap: 20px;
-}
-
-/* Header Styles */
-header {
-    background: linear-gradient to right, #6a11cb, #2575fc); /* Vibrant gradient */
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2.2em;
-    letter-spacing: 1px;
-}
-
-header nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-header nav ul li {
-    margin-right: 25px;
-}
-
-header nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.1em;
-    padding: 5px 0;
-    transition: color 0.3s ease, border-bottom 0.3s ease;
-}
-
-header nav ul li a:hover {
-    color: #a7f7ff; /* Lighter blue on hover */
-    border-bottom: 2px solid #a7f7ff;
-}
-
-#auth-section {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#user-display {
-    color: #a7f7ff;
-    font-weight: bold;
-    font-size: 1.05em;
-}
-
-/* Buttons */
-button {
-    background-color: #007bff; /* Primary blue */
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 25px; /* More rounded */
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-}
-
-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
-}
-
-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.link-button {
-    background: none;
-    border: none;
-    color: #007bff;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
-    font-size: inherit;
-    transition: color 0.3s ease;
-    box-shadow: none; /* No shadow for link buttons */
-}
-
-.link-button:hover {
-    color: #0056b3;
-    text-decoration: none;
-    transform: none;
-}
-
-/* Card Styles */
-.card {
-    background-color: white;
-    border-radius: 12px; /* More rounded corners */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-/* Specific Layout Adjustments */
-.left-sidebar,
-.right-sidebar {
-    flex: 1; /* Equal width for sidebars in general layout */
-    min-width: 250px;
-}
-
-.main-content {
-    flex: 2; /* Main content takes more space */
-    min-width: 400px;
-}
-
+/* General layout for pages with only center content */
 .center-content-only {
     display: flex;
     justify-content: center;
@@ -160,129 +10,323 @@ button:active {
     width: 100%;
 }
 
-/* Form Styles */
-form {
+/* Base styles */
+body {
+    /* Facebook-like fonts */
+    font-family: 'Segoe UI', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    margin: 0;
+    background-color: #f0f2f5; /* Facebook light grey background for main page */
+    color: #1c1e21; /* Facebook dark text */
+    line-height: 1.34; /* Standard line height */
+}
+
+/* Header */
+header {
+    background-color: #ffffff; /* White background for header */
+    color: #1c1e21; /* Dark text for header (default inherited) */
+    padding: 10px 20px;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-form label {
-    font-weight: bold;
-    color: #333;
+header h1 {
+    margin: 0;
+    color: #1877f2; /* Facebook blue for main title */
+    font-size: 1.7em; /* Slightly smaller for Facebook feel */
+    font-weight: 700;
 }
 
-form input[type="email"],
-form input[type="password"],
-form input[type="text"],
-form textarea {
-    padding: 12px;
-    border: 1px solid #ced4da; /* Light grey border */
-    border-radius: 8px; /* Rounded input fields */
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
 }
 
-form input[type="email"]:focus,
-form input[type="password"]:focus,
-form input[type="text"]:focus,
-form textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-    outline: none;
+header nav ul li {
+    margin-right: 20px;
 }
 
-form textarea {
-    resize: vertical;
-    min-height: 80px;
+header nav ul li a {
+    color: #65676b; /* Dark grey for nav links */
+    text-decoration: none;
+    font-weight: 600; /* Medium bold */
+    transition: color 0.3s ease;
+    font-size: 0.95em;
 }
 
-/* Modal Styles */
+header nav ul li a:hover {
+    color: #1877f2; /* Facebook blue on hover */
+}
+
+/* Auth Section in Header */
+#auth-section, #auth-section-about, #auth-section-contact, #auth-section-postlist {
+    display: flex;
+    align-items: center;
+}
+
+#auth-section span, #auth-section-about span, #auth-section-contact span, #auth-section-postlist span {
+    margin-right: 10px;
+    font-weight: 600;
+    color: #1c1e21; /* Dark text for user display */
+}
+
+/* Buttons */
+button {
+    background-color: #1877f2; /* Facebook blue */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px; /* Slightly rounded for Facebook feel */
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #166fe5; /* Darker Facebook blue on hover */
+}
+
+/* Links that look like buttons */
+.link-button {
+    background: none;
+    border: none;
+    color: #1877f2;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: inherit;
+    padding: 0;
+    font-weight: 600;
+}
+.link-button:hover {
+    color: #166fe5;
+}
+
+
+/* Main Layout */
+.main-layout {
+    display: flex;
+    max-width: 1200px; /* Adjust max-width for overall layout */
+    margin: 20px auto;
+    padding: 0 20px;
+    gap: 20px; /* Space between columns */
+}
+
+.homepage-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Left, Main, Right */
+    gap: 20px;
+}
+
+.left-sidebar, .right-sidebar {
+    flex: 1;
+    min-width: 250px;
+}
+
+.main-content {
+    flex: 2;
+    min-width: 450px;
+}
+
+/* Cards (containers for content) */
+.card {
+    background-color: #ffffff; /* White background for cards */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Subtle card shadow */
+    margin-bottom: 20px;
+}
+
+.card h2, .card h3 {
+    color: #1c1e21; /* Dark text for headings */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+/* Footer */
+footer {
+    background-color: #ffffff; /* White background for footer */
+    color: #65676b; /* Facebook grey text */
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 20px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.85em;
+}
+
+/* Modals (Login/Signup) */
 .modal {
     display: none; /* Hidden by default */
     position: fixed;
-    z-index: 1001; /* Above header */
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay for modal */
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(5px); /* Blurred background */
 }
 
 .modal-container {
-    background-color: white;
+    background-color: #ffffff; /* White modal background */
     margin: auto;
     padding: 30px;
-    border-radius: 15px; /* More rounded */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 450px; /* Slightly larger */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
     position: relative;
-    animation: fadeInScale 0.3s ease-out;
-}
-
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
 }
 
 .modal-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 2em;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
     font-weight: bold;
-    color: #aaa;
+    color: #888;
     background: none;
     border: none;
     cursor: pointer;
     padding: 5px;
-    transition: color 0.3s ease;
 }
 
 .modal-close:hover {
-    color: #333;
+    color: #555;
 }
 
 .modal h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 25px;
-    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #1c1e21; /* Dark text on white modal */
+}
+
+.modal form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #65676b; /* Dark grey label text */
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.modal form input[type="email"],
+.modal form input[type="password"],
+.modal form input[type="text"] {
+    width: calc(100% - 22px); /* Account for padding and border */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #dddfe2; /* Facebook-like border */
+    border-radius: 6px;
+    font-size: 1em;
+}
+
+.modal form button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 6px;
+    background-color: #1877f2;
+    color: white;
+}
+
+.modal form button[type="submit"]:hover {
+    background-color: #166fe5;
+}
+
+#auth-error-msg {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #721c24; /* Dark red text for error */
+    background-color: #f8d7da; /* Light red background for error */
+    border: 1px solid #f5c6cb; /* Red border for error */
+    padding: 8px; /* Added padding for better appearance */
+    border-radius: 5px; /* Rounded corners */
 }
 
 #switch-auth {
     text-align: center;
-    margin-top: 20px;
-    color: #007bff;
+    margin-top: 15px;
+    color: #1877f2; /* Facebook blue link */
     cursor: pointer;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9em;
 }
-
 #switch-auth:hover {
-    color: #0056b3;
+    text-decoration: underline;
 }
 
-/* Debug Message */
-.debug-msg {
-    padding: 10px 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    font-weight: bold;
+/* User Profile Specific Styles */
+.profile-page-layout {
+    display: flex;
+    flex-direction: column; /* Stack sections vertically on profile page */
+    align-items: center;
+    width: 100%;
+}
+
+.profile-page-layout .card {
+    width: 100%;
+    max-width: 600px; /* Limit width of profile card */
     text-align: center;
-    opacity: 0.9;
-    animation: fadeOut 5s forwards; /* Fade out after 5 seconds */
+}
+
+#profile-avatar-container {
+    margin-bottom: 15px;
+}
+
+.user-avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ccd0d5; /* Placeholder color */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    overflow: hidden; /* For actual image later */
+}
+
+#profile-display-name {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+    color: #1c1e21; /* Dark text on white card */
+    font-weight: 700;
+}
+
+#profile-email {
+    font-size: 0.9em;
+    color: #65676b; /* Dark grey text on white card */
+    margin-bottom: 15px;
+}
+
+/* Debug Message Styles */
+.debug-msg {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    text-align: center;
+    display: block; /* Show by default for visibility */
+    font-weight: 500;
+}
+
+.debug-msg.info {
+    background-color: #e7f3fe;
+    color: #2196F3;
+    border: 1px solid #2196F3;
 }
 
 .debug-msg.error {
@@ -297,405 +341,393 @@ form textarea {
     border: 1px solid #c3e6cb;
 }
 
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+/* Post Creation Section */
+#post-creation {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
 }
 
-/* Footer Styles */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 15px 20px;
-    margin-top: 30px;
-    font-size: 0.9em;
+#post-creation h2 {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #1c1e21; /* Dark text on white card */
 }
 
-/* User Avatar Styles */
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    background-color: #2575fc; /* Primary color */
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1em;
-    flex-shrink: 0; /* Prevent shrinking in flex containers */
-}
-
-.user-avatar-large {
-    width: 100px; /* Larger size for profile page */
-    height: 100px;
-    font-size: 2.5em;
-    margin: 0 auto 15px;
-    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradient for large avatar */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Post Item Styles */
-.post-item {
-    padding: 18px;
-    margin-bottom: 15px;
-    border-left: 5px solid #2575fc; /* Accent border */
-}
-
-.post-item h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
-    font-size: 1.5em;
-    color: #007bff;
-}
-
-.post-item h3 a {
-    text-decoration: none;
-    color: #007bff;
-    transition: color 0.3s ease;
-}
-
-.post-item h3 a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.post-meta {
-    font-size: 0.85em;
-    color: #666;
+#post-creation input[type="text"],
+#post-creation textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
     margin-bottom: 10px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 1em;
+    resize: vertical;
 }
 
-.read-more {
-    display: inline-block;
+#post-creation button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+}
+
+/* Post List / Recent Posts */
+#posts-container .post-item,
+#titles-container .post-title-item,
+#user-posts-list .post-item {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0; /* Lighter border for posts */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Very subtle shadow */
+}
+
+#posts-container .post-item h3,
+#titles-container .post-title-item h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1c1e21; /* Dark text on white card */
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+#posts-container .post-item p {
+    color: #4b4f56; /* Slightly lighter text for content */
+    line-height: 1.5;
+    font-size: 0.95em;
+}
+
+#posts-container .post-item .post-meta,
+#titles-container .post-title-item .post-meta {
+    font-size: 0.8em;
+    color: #65676b; /* Dark grey text on white card */
     margin-top: 10px;
-    color: #28a745; /* Green for read more */
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
 }
 
-.read-more:hover {
-    color: #218838;
+#titles-container .post-title-item a {
+    text-decoration: none;
+    color: #1877f2;
+    font-weight: 600;
+}
+
+#titles-container .post-title-item a:hover {
     text-decoration: underline;
 }
 
 /* Chatroom Specific Styles */
 #chat-messages-container {
     height: 400px; /* Fixed height for chat messages */
-    overflow-y: auto;
+    overflow-y: scroll;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 15px;
+    background-color: #fcfcfc; /* Very light background for chat area */
     margin-bottom: 15px;
-    background-color: #f9f9f9;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* For proper message stacking */
 }
 
 .chat-message-item {
     display: flex;
-    align-items: flex-start;
     margin-bottom: 10px;
-    word-wrap: break-word;
-    max-width: 80%; /* Limit message width */
-    position: relative; /* For timestamp positioning */
+    align-items: flex-end; /* Align bubbles to bottom of line */
 }
 
-.chat-message-item .message-bubble {
-    background-color: #e9e9e9;
-    border-radius: 18px; /* More rounded bubbles */
-    padding: 10px 15px;
-    max-width: calc(100% - 60px); /* Adjust for avatar */
-    position: relative;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #ccd0d5; /* Default grey avatar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
-.chat-message-item .message-header {
+.message-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%; /* Limit message bubble width */
+}
+
+.message-header {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
+    font-size: 0.85em;
 }
 
-.chat-message-item .message-header strong {
+.message-header strong {
+    color: #1c1e21; /* Dark text for username */
     margin-right: 5px;
-    color: #050505;
+    font-weight: 600;
 }
 
-.chat-message-item .message-timestamp {
+.message-timestamp {
+    color: #65676b; /* Dark grey timestamp */
     font-size: 0.75em;
-    color: #65676b;
-    display: block;
-    text-align: right;
-    margin-top: 5px;
+}
+
+.message-bubble {
+    padding: 10px 15px;
+    border-radius: 18px; /* Rounded corners for chat bubbles */
+    word-wrap: break-word;
+    white-space: pre-wrap; /* Preserve newlines */
+    line-height: 1.4;
+    font-size: 0.95em;
 }
 
 .my-message {
     justify-content: flex-end; /* Align to right */
-    align-self: flex-end; /* Align the whole item to the right */
 }
+.my-message .user-avatar { order: 2; margin-left: 8px; }
+.my-message .message-content-wrapper { order: 1; align-items: flex-end; }
 .my-message .message-bubble {
-    background-color: #dcf8c6; /* Green bubble for my messages */
-    border-bottom-right-radius: 4px; /* Pointy end */
+    background-color: #0084ff; /* Facebook message blue for my messages */
+    color: white;
 }
 
 .other-message {
     justify-content: flex-start; /* Align to left */
-    align-self: flex-start; /* Align the whole item to the left */
 }
+.other-message .user-avatar { order: 1; margin-right: 8px; }
+.other-message .message-content-wrapper { order: 2; align-items: flex-start; }
 .other-message .message-bubble {
-    background-color: #e9e9eb; /* Grey bubble for other messages */
-    border-bottom-left-radius: 4px; /* Pointy end */
+    background-color: #e4e6eb; /* Light grey for others' messages (Facebook like) */
+    color: #1c1e21; /* Dark text for others' messages */
 }
 
 #chat-input-area {
     display: flex;
-    align-items: stretch;
     margin-top: 15px;
 }
+
 #chat-message-input {
     flex-grow: 1;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #dddfe2;
+    border-radius: 18px; /* Rounded input */
     resize: none;
     font-family: inherit;
     font-size: 0.9em;
+    margin-right: 10px;
 }
+
 #send-chat-btn {
-    margin-left: 10px;
     padding: 10px 20px;
-    background-color: #28a745; /* Green send button */
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
-}
-#send-chat-btn:hover {
-    background-color: #218838;
-    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+    border-radius: 18px; /* Rounded button */
+    font-weight: 600;
 }
 
-#chat-login-msg {
-    margin-top: 15px;
-    font-style: italic;
-    color: #888;
-}
-
-/* Message Specific Styles */
+/* Messages Page Specific Styles */
 #messages-section {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 #message-interface {
     display: flex;
     flex-grow: 1;
-    gap: 20px;
-    height: 600px; /* Fixed height for message interface */
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    overflow: hidden; /* Ensure content stays within bounds */
+    overflow: hidden; /* For internal scrolling */
 }
 
 #conversation-list {
-    flex: 1;
+    width: 250px;
     border-right: 1px solid #e0e0e0;
-    padding: 15px;
+    padding-right: 15px;
     overflow-y: auto;
-    background-color: #f8f8f8;
+    flex-shrink: 0;
+    background-color: #f8f8f8; /* Light background for conversation list */
 }
 
-#conversation-list h3 {
-    margin-top: 0;
-    color: #007bff;
-}
-
-.conversation-item {
+#conversations-container .conversation-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 12px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    gap: 10px;
 }
 
-.conversation-item:hover {
-    background-color: #e6f2ff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+#conversations-container .conversation-item:last-child {
+    border-bottom: none;
 }
 
-.conversation-item.active {
-    background-color: #d1e7ff;
-    border-left: 4px solid #007bff;
-    font-weight: bold;
+#conversations-container .conversation-item:hover {
+    background-color: #f0f2ff; /* Lighter hover background */
+}
+
+#conversations-container .conversation-item.active {
+    background-color: #e7f3fe; /* Active conversation background */
+    font-weight: 600;
 }
 
 .conversation-item .user-avatar {
-    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 1em;
 }
 
-.conversation-item span {
+.conversation-item .conversation-info {
     flex-grow: 1;
+}
+
+.conversation-item .last-message-snippet {
+    font-size: 0.8em;
+    color: #65676b; /* Dark grey text */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.conversation-item .last-message-time {
-    font-size: 0.8em;
-    color: #888;
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
 #active-conversation {
-    flex: 2;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     padding: 15px;
-}
-
-#recipient-name {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #007bff;
-    text-align: center;
 }
 
 #messages-container {
-    flex-grow: 1;
-    overflow-y: auto;
-    border: 1px solid #e0e0e0;
+    height: 350px;
+    overflow-y: scroll;
+    border: 1px solid #dddfe2;
     border-radius: 8px;
     padding: 15px;
-    background-color: #f9f9f9;
+    background-color: #ffffff; /* White background for message area */
+    margin-bottom: 15px;
+    flex-grow: 1; /* Allow messages container to expand */
     display: flex;
     flex-direction: column;
+}
+
+.message-entry {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: flex-start; /* Align text to top of line */
+}
+
+.message-entry .user-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    margin-top: 5px; /* Adjust for avatar alignment with text */
+}
+
+.message-entry .message-details {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+}
+
+.message-entry .message-author {
+    font-weight: 600;
+    color: #1c1e21; /* Dark text for username */
+    font-size: 0.9em;
+    margin-bottom: 2px;
+}
+
+.message-entry .message-text {
+    background-color: #e4e6eb; /* Light grey for messages */
+    padding: 8px 12px;
+    border-radius: 12px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    color: #1c1e21; /* Dark text for message content */
+    font-size: 0.95em;
+}
+
+.message-entry .message-timestamp {
+    font-size: 0.7em;
+    color: #65676b; /* Dark grey timestamp */
+    margin-top: 3px;
+    text-align: left;
+}
+
+/* My messages in private chat */
+.message-entry.my-message-private {
+    justify-content: flex-end;
+}
+.message-entry.my-message-private .message-details {
+    align-items: flex-end;
+}
+.message-entry.my-message-private .user-avatar {
+    order: 2; /* Avatar on the right */
+    margin-right: 0;
+    margin-left: 8px;
+}
+.message-entry.my-message-private .message-text {
+    background-color: #0084ff; /* Facebook message blue for my messages */
+    color: white;
+}
+.message-entry.my-message-private .message-timestamp {
+    text-align: right;
 }
 
 #message-input-area {
     display: flex;
-    align-items: stretch;
     margin-top: 15px;
+    align-items: stretch;
 }
 
 #message-text-input {
     flex-grow: 1;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #dddfe2;
+    border-radius: 18px;
     resize: none;
     font-family: inherit;
     font-size: 0.9em;
+    margin-right: 10px;
 }
 
 #send-message-btn {
-    margin-left: 10px;
     padding: 10px 20px;
-    background-color: #28a745;
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
-}
-#send-message-btn:hover {
-    background-color: #218838;
-    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+    border-radius: 18px;
+    font-weight: 600;
 }
 
-/* Profile Specific Styles */
-.profile-page-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center items horizontally */
-    width: 100%;
-    max-width: 700px; /* Limit width for profile content */
-    margin: 0 auto; /* Center the layout itself */
-}
 
-#profile-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-#profile-avatar-container {
-    margin-bottom: 15px;
-}
-
-#profile-display-name {
-    font-size: 2.2em;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-#profile-email {
-    font-size: 1em;
-    color: #666;
-    margin-bottom: 15px;
-}
-
-#profile-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-#user-posts {
-    width: 100%; /* Take full width of its container */
-}
-
-#user-posts h3 {
-    margin-top: 0;
-    color: #007bff;
-}
-
-#user-posts-list .post-item {
-    margin-top: 10px;
-    border-left: 5px solid #28a745; /* Different accent for profile posts */
-}
-
-/* Responsive adjustments */
+/* Responsive Design - Basic example */
 @media (max-width: 768px) {
-    .main-layout,
-    .homepage-layout {
+    .main-layout {
         flex-direction: column;
-        grid-template-columns: 1fr; /* Stack columns on small screens */
         padding: 10px;
-        gap: 15px;
     }
 
-    header {
-        flex-direction: column;
-        text-align: center;
-        padding: 10px;
+    .homepage-layout {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    }
+
+    .left-sidebar, .right-sidebar, .main-content {
+        min-width: unset;
+        width: 100%;
     }
 
     header nav ul {
         flex-direction: column;
+        align-items: center;
         margin-top: 10px;
     }
 
     header nav ul li {
-        margin: 5px 0;
-    }
-
-    #auth-section {
-        margin-top: 10px;
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 
     .modal-container {
         width: 95%;
         padding: 20px;
-    }
-
-    #message-interface {
-        flex-direction: column;
-        height: auto; /* Allow height to adjust */
-    }
-
-    #conversation-list {
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
     }
 }
