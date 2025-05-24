@@ -1,30 +1,46 @@
-/* css/style.css */
-
-/* Basic Reset & Body Styles */
+/* General Body and Container Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f2f5; /* Light gray background */
-    color: #333;
+    background-color: #f0f2f5; /* Light grey background */
+    color: #1c1e21; /* Dark grey text */
     line-height: 1.6;
+}
+
+.main-layout {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    gap: 20px; /* Space between columns */
+    max-width: 1200px; /* Max width for the entire layout */
+    margin: 20px auto;
+}
+
+.homepage-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Left, Main, Right ratio */
+    gap: 20px;
 }
 
 /* Header Styles */
 header {
-    background-color: #4267B2; /* Facebook blue */
+    background: linear-gradient to right, #6a11cb, #2575fc); /* Vibrant gradient */
     color: white;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 header h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 2.2em;
+    letter-spacing: 1px;
 }
 
 header nav ul {
@@ -32,564 +48,368 @@ header nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
 }
 
 header nav ul li {
-    margin-left: 20px;
+    margin-right: 25px;
 }
 
 header nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    font-size: 1.1em;
     padding: 5px 0;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
 }
 
 header nav ul li a:hover {
-    color: #ddd;
+    color: #a7f7ff; /* Lighter blue on hover */
+    border-bottom: 2px solid #a7f7ff;
 }
 
 #auth-section {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between elements */
-    margin-top: 5px; /* Adjust for responsiveness */
+    gap: 10px;
 }
 
-#auth-section span {
+#user-display {
+    color: #a7f7ff;
     font-weight: bold;
+    font-size: 1.05em;
 }
 
-#auth-section button {
-    background-color: #fff;
-    color: #4267B2;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-#auth-section button:hover {
-    background-color: #e0e0e0;
-}
-
-/* Main Layout */
-.main-layout {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    gap: 20px; /* Space between columns */
-    max-width: 1200px; /* Max width for content */
-    margin: 20px auto; /* Center the layout */
-}
-
-/* Sidebar Styles */
-.left-sidebar, .right-sidebar {
-    flex: 1; /* Allow sidebars to take equal space initially */
-    min-width: 250px; /* Minimum width for sidebars */
-    max-width: 300px; /* Maximum width for sidebars */
-    padding: 0; /* Cards inside will have padding */
-}
-
-/* Debug Message Styles */
-.debug-msg {
-    background-color: #ffc;
-    border: 1px solid #c9c;
-    padding: 10px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 5px;
-    color: #555;
-    display: none; /* Hidden by default */
-}
-
-/* User Info Section (Sidebar) */
-#user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#user-info img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border: 3px solid #4267B2;
-}
-
-#user-info span {
-    font-weight: bold;
-    font-size: 1.1em;
-    margin-bottom: 10px;
-}
-
-#edit-profile-btn {
-    background-color: #4267B2;
+/* Buttons */
+button {
+    background-color: #007bff; /* Primary blue */
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 10px 18px;
+    border-radius: 25px; /* More rounded */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
-#edit-profile-btn:hover {
-    background-color: #365899;
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
 }
 
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-/* Common Card Style */
+.link-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    transition: color 0.3s ease;
+    box-shadow: none; /* No shadow for link buttons */
+}
+
+.link-button:hover {
+    color: #0056b3;
+    text-decoration: none;
+    transform: none;
+}
+
+/* Card Styles */
 .card {
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
     padding: 20px;
-    margin-bottom: 20px; /* Space between cards */
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card h2, .card h3 {
-    color: #4267B2;
-    margin-top: 0;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Profiles List (Members) */
-#profiles-list #all-users {
-    max-height: 300px; /* Limit height for scrollability */
-    overflow-y: auto;
+/* Specific Layout Adjustments */
+.left-sidebar,
+.right-sidebar {
+    flex: 1; /* Equal width for sidebars in general layout */
+    min-width: 250px;
 }
 
-.member-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.member-item:last-child {
-    border-bottom: none;
-}
-
-.member-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-    border: 2px solid #ccc;
-}
-
-.member-name {
-    font-weight: bold;
-    color: #555;
-}
-
-/* Center Content Area */
-.center-content {
-    flex: 2; /* Center content takes more space */
+.main-content {
+    flex: 2; /* Main content takes more space */
     min-width: 400px;
 }
 
-/* Post Create Section */
-#post-create textarea {
+.center-content-only {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    max-width: 900px; /* Adjust as needed */
+    margin: 20px auto;
+}
+.center-content-only .card {
     width: 100%;
-    min-height: 100px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1em;
-    margin-bottom: 10px;
-    box-sizing: border-box; /* Include padding in width */
 }
 
-#post-create button {
-    background-color: #28a745; /* Green for post button */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-#post-create button:hover {
-    background-color: #218838;
-}
-
-#post-create input[type="file"] {
-    margin-bottom: 10px;
-    display: block; /* Ensures it takes full width */
-}
-
-
-/* Posts Display */
-.post-item {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.post-header {
+/* Form Styles */
+form {
     display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    position: relative; /* For positioning delete button */
+    flex-direction: column;
+    gap: 12px;
 }
 
-.post-user-photo {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-    border: 2px solid #f0f2f5;
-}
-
-.post-username {
+form label {
     font-weight: bold;
-    color: #4267B2;
-    flex-grow: 1; /* Allows username to take available space */
-}
-
-.post-timestamp {
-    font-size: 0.85em;
-    color: #666;
-    margin-left: auto; /* Push timestamp to the right */
-}
-
-.post-content p {
-    margin: 0 0 10px 0;
-    font-size: 1.05em;
     color: #333;
-    white-space: pre-wrap; /* Preserve whitespace and line breaks */
-    word-wrap: break-word; /* Break long words */
 }
 
-.post-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-top: 10px;
+form input[type="email"],
+form input[type="password"],
+form input[type="text"],
+form textarea {
+    padding: 12px;
+    border: 1px solid #ced4da; /* Light grey border */
+    border-radius: 8px; /* Rounded input fields */
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.post-actions {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 10px;
-    align-items: center;
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form input[type="text"]:focus,
+form textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
 }
 
-.post-actions button {
-    background: none;
-    border: none;
-    color: #4267B2;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background-color 0.2s ease;
+form textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
-.post-actions button:hover {
-    background-color: #e6f0ff;
-}
-
-.like-count {
-    margin-left: 5px;
-    font-weight: normal;
-    color: #555;
-}
-
-/* Edit and Delete Buttons for Posts (Owner Actions) */
-.post-owner-actions {
-    position: absolute;
-    right: 0;
-    top: 10px; /* Adjust as needed */
-    display: flex;
-    gap: 5px;
-}
-
-.post-owner-actions .edit-btn,
-.post-owner-actions .delete-btn {
-    background-color: #f44336; /* Red for delete */
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8em;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.3s ease;
-}
-
-.post-owner-actions .edit-btn {
-    background-color: #007bff; /* Blue for edit */
-}
-
-.post-owner-actions .edit-btn:hover {
-    background-color: #0056b3;
-}
-
-.post-owner-actions .delete-btn:hover {
-    background-color: #da190b;
-}
-
-
-/* Authentication Modal */
-#auth-modal {
-    display: none; /* Hidden by default, shown by JS */
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
     position: fixed;
-    z-index: 1000;
+    z-index: 1001; /* Above header */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(5px); /* Blurred background */
 }
 
 .modal-container {
     background-color: white;
+    margin: auto;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 15px; /* More rounded */
     width: 90%;
-    max-width: 400px;
+    max-width: 450px; /* Slightly larger */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     position: relative;
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .modal-close {
     position: absolute;
     top: 15px;
     right: 15px;
-    font-size: 24px;
+    font-size: 2em;
     font-weight: bold;
     color: #aaa;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
 }
 
 .modal-close:hover {
-    color: #555;
+    color: #333;
 }
 
-#auth-title {
+.modal h2 {
     text-align: center;
-    color: #4267B2;
-    margin-bottom: 20px;
-}
-
-#auth-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-#auth-form input[type="email"],
-#auth-form input[type="password"],
-#auth-form input[type="text"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-#auth-form button#auth-submit {
-    width: 100%;
-    background-color: #4267B2;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#auth-form button#auth-submit:hover {
-    background-color: #365899;
-}
-
-#auth-error-msg {
-    color: red;
-    text-align: center;
-    margin-top: 10px;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8em;
 }
 
 #switch-auth {
     text-align: center;
-    margin-top: 15px;
-    color: #4267B2;
+    margin-top: 20px;
+    color: #007bff;
     cursor: pointer;
-    text-decoration: underline;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 #switch-auth:hover {
-    color: #365899;
+    color: #0056b3;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Profile Page Specific Styles (for profile.html) */
-#profile-details {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-#profile-details .profile-header {
-    margin-bottom: 20px;
-}
-
-#profile-details #profile-photo {
-    width: 120px;
-    height: 120px;
-    border: 4px solid #4267B2;
-    margin-bottom: 15px;
-}
-
-#profile-details #profile-name {
-    font-size: 1.8em;
-    margin: 10px 0 5px;
-    color: #333;
-}
-
-#profile-details #profile-email {
-    font-size: 1em;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-#profile-details #change-photo-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-}
-
-#profile-details #change-photo-btn:hover {
-    background-color: #0056b3;
-}
-
-.profile-edit-form {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-    border: 1px solid #eee;
-}
-
-.profile-edit-form label {
-    text-align: left;
-    margin-bottom: 5px;
-}
-
-.profile-edit-form input {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.profile-edit-form button {
+/* Debug Message */
+.debug-msg {
     padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-bottom: 20px;
+    border-radius: 8px;
     font-weight: bold;
-    margin-right: 10px;
-    transition: background-color 0.3s ease;
-}
-
-#save-profile-btn {
-    background-color: #28a745;
-    color: white;
-}
-
-#save-profile-btn:hover {
-    background-color: #218838;
-}
-
-#cancel-edit-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-#cancel-edit-btn:hover {
-    background-color: #c82333;
-}
-
-#my-posts h2 {
     text-align: center;
+    opacity: 0.9;
+    animation: fadeOut 5s forwards; /* Fade out after 5 seconds */
 }
 
-#no-posts-msg {
+.debug-msg.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.debug-msg.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: white;
     text-align: center;
+    padding: 15px 20px;
+    margin-top: 30px;
+    font-size: 0.9em;
+}
+
+/* User Avatar Styles */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #2575fc; /* Primary color */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1em;
+    flex-shrink: 0; /* Prevent shrinking in flex containers */
+}
+
+.user-avatar-large {
+    width: 100px; /* Larger size for profile page */
+    height: 100px;
+    font-size: 2.5em;
+    margin: 0 auto 15px;
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradient for large avatar */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Post Item Styles */
+.post-item {
+    padding: 18px;
+    margin-bottom: 15px;
+    border-left: 5px solid #2575fc; /* Accent border */
+}
+
+.post-item h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.5em;
+    color: #007bff;
+}
+
+.post-item h3 a {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+.post-item h3 a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.post-meta {
+    font-size: 0.85em;
     color: #666;
-    font-style: italic;
-    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-/* Chatroom Specific Styles (for chat.html) */
-#chatroom {
-    padding: 20px;
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    color: #28a745; /* Green for read more */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
+.read-more:hover {
+    color: #218838;
+    text-decoration: underline;
+}
+
+/* Chatroom Specific Styles */
 #chat-messages-container {
-    max-height: 450px; /* Height for chat scroll area */
+    height: 400px; /* Fixed height for chat messages */
     overflow-y: auto;
-    border: 1px solid #ddd;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 15px;
-    background-color: #fdfdfd;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-message-item {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    align-items: flex-start; /* Default for others' messages */
+    align-items: flex-start;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    max-width: 80%; /* Limit message width */
+    position: relative; /* For timestamp positioning */
 }
 
-.chat-message-item.my-message {
-    align-items: flex-end; /* Align own messages to the right */
+.chat-message-item .message-bubble {
+    background-color: #e9e9e9;
+    border-radius: 18px; /* More rounded bubbles */
+    padding: 10px 15px;
+    max-width: calc(100% - 60px); /* Adjust for avatar */
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .chat-message-item .message-header {
@@ -598,118 +418,260 @@ header nav ul li a:hover {
     margin-bottom: 5px;
 }
 
-.chat-message-item.my-message .message-header {
-    flex-direction: row-reverse; /* Put photo on right for own messages */
+.chat-message-item .message-header strong {
+    margin-right: 5px;
+    color: #050505;
 }
 
-.chat-message-item .chat-user-photo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 8px;
-}
-
-.chat-message-item.my-message .chat-user-photo {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-
-.chat-message-item .chat-username {
-    font-weight: bold;
-    color: #4267B2;
-    font-size: 0.9em;
-}
-
-.chat-message-item .chat-timestamp {
+.chat-message-item .message-timestamp {
     font-size: 0.75em;
-    color: #888;
-    margin-left: 10px;
+    color: #65676b;
+    display: block;
+    text-align: right;
+    margin-top: 5px;
 }
 
-.chat-message-item.my-message .chat-timestamp {
-    margin-left: 0;
-    margin-right: 10px;
+.my-message {
+    justify-content: flex-end; /* Align to right */
+    align-self: flex-end; /* Align the whole item to the right */
+}
+.my-message .message-bubble {
+    background-color: #dcf8c6; /* Green bubble for my messages */
+    border-bottom-right-radius: 4px; /* Pointy end */
 }
 
-.chat-message-item .message-text {
-    background-color: #e9e9eb; /* Light gray for others */
-    padding: 10px 15px;
-    border-radius: 18px;
-    max-width: 75%; /* Limit message bubble width */
-    word-wrap: break-word;
-    font-size: 0.95em;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+.other-message {
+    justify-content: flex-start; /* Align to left */
+    align-self: flex-start; /* Align the whole item to the left */
 }
-
-.chat-message-item.my-message .message-text {
-    background-color: #007bff; /* Blue for own messages */
-    color: white;
-}
-
-.delete-chat-message-btn {
-    background: none;
-    border: none;
-    color: #f44336;
-    font-size: 0.75em;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: color 0.2s ease;
-}
-
-.delete-chat-message-btn:hover {
-    text-decoration: underline;
+.other-message .message-bubble {
+    background-color: #e9e9eb; /* Grey bubble for other messages */
+    border-bottom-left-radius: 4px; /* Pointy end */
 }
 
 #chat-input-area {
     display: flex;
-    gap: 10px;
+    align-items: stretch;
+    margin-top: 15px;
+}
+#chat-message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-family: inherit;
+    font-size: 0.9em;
+}
+#send-chat-btn {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #28a745; /* Green send button */
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+#send-chat-btn:hover {
+    background-color: #218838;
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+}
+
+#chat-login-msg {
+    margin-top: 15px;
+    font-style: italic;
+    color: #888;
+}
+
+/* Message Specific Styles */
+#messages-section {
+    display: flex;
+    flex-direction: column;
+}
+
+#message-interface {
+    display: flex;
+    flex-grow: 1;
+    gap: 20px;
+    height: 600px; /* Fixed height for message interface */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden; /* Ensure content stays within bounds */
+}
+
+#conversation-list {
+    flex: 1;
+    border-right: 1px solid #e0e0e0;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f8f8f8;
+}
+
+#conversation-list h3 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.conversation-item {
+    display: flex;
     align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.conversation-item:hover {
+    background-color: #e6f2ff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.conversation-item.active {
+    background-color: #d1e7ff;
+    border-left: 4px solid #007bff;
+    font-weight: bold;
+}
+
+.conversation-item .user-avatar {
+    margin-right: 10px;
+}
+
+.conversation-item span {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conversation-item .last-message-time {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+#active-conversation {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+#recipient-name {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #007bff;
+    text-align: center;
+}
+
+#messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
+
+#message-input-area {
+    display: flex;
+    align-items: stretch;
     margin-top: 15px;
 }
 
-#chat-input {
-    flex-grow: 1; /* Take remaining space */
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    font-size: 1em;
-    resize: none; /* Disable textarea resize handle */
+#message-text-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-family: inherit;
+    font-size: 0.9em;
 }
 
 #send-message-btn {
-    background-color: #4267B2;
-    color: white;
-    border: none;
+    margin-left: 10px;
     padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
+    background-color: #28a745;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
 }
-
 #send-message-btn:hover {
-    background-color: #365899;
+    background-color: #218838;
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
 }
 
-#chat-login-prompt {
+/* Profile Specific Styles */
+.profile-page-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    width: 100%;
+    max-width: 700px; /* Limit width for profile content */
+    margin: 0 auto; /* Center the layout itself */
+}
+
+#profile-header {
     text-align: center;
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
+#profile-avatar-container {
+    margin-bottom: 15px;
+}
 
-/* Responsive Design */
+#profile-display-name {
+    font-size: 2.2em;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+#profile-email {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+#profile-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+#user-posts {
+    width: 100%; /* Take full width of its container */
+}
+
+#user-posts h3 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+#user-posts-list .post-item {
+    margin-top: 10px;
+    border-left: 5px solid #28a745; /* Different accent for profile posts */
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+    .main-layout,
+    .homepage-layout {
+        flex-direction: column;
+        grid-template-columns: 1fr; /* Stack columns on small screens */
+        padding: 10px;
+        gap: 15px;
+    }
+
     header {
         flex-direction: column;
         text-align: center;
+        padding: 10px;
     }
 
     header nav ul {
-        margin-top: 10px;
         flex-direction: column;
-        align-items: center;
+        margin-top: 10px;
     }
 
     header nav ul li {
@@ -717,290 +679,23 @@ header nav ul li a:hover {
     }
 
     #auth-section {
-        margin-top: 15px;
-    }
-
-    .main-layout {
-        flex-direction: column;
-        padding: 10px;
         margin-top: 10px;
     }
 
-    .left-sidebar, .right-sidebar, .center-content {
-        max-width: 100%;
-        min-width: unset; /* Remove min-width for mobile */
-        width: 100%; /* Make them take full width */
+    .modal-container {
+        width: 95%;
+        padding: 20px;
     }
 
-    .card {
-        margin-bottom: 15px;
+    #message-interface {
+        flex-direction: column;
+        height: auto; /* Allow height to adjust */
     }
 
-    #profiles-list #all-users {
-        max-height: 250px; /* Adjust height for mobile */
+    #conversation-list {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
     }
-
-    #chat-messages-container {
-        max-height: 350px; /* Adjust height for mobile chat */
-    }
-
-    .chat-message-item .message-text {
-        max-width: 90%; /* Allow wider messages on smaller screens */
-    }
-}
-
-/* --- Live Specific Styles (add to style.css) --- */
-
-.live-event-item {
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #fdfdfd;
-    border-left: 5px solid #007bff; /* Blue border for live events */
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.live-event-item h4 {
-    color: #4267B2;
-    margin-top: 0;
-    margin-bottom: 5px;
-}
-
-.live-event-item p {
-    margin-bottom: 5px;
-    font-size: 0.95em;
-    color: #555;
-}
-
-.live-event-item .member-photo {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    object-fit: cover;
-    vertical-align: middle;
-    margin-right: 5px;
-}
-
-#announce-live-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-#announce-live-form input[type="text"],
-#announce-live-form input[type="datetime-local"],
-#announce-live-form textarea,
-#live-comment-input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box;
-}
-
-#announce-live-form textarea,
-#live-comment-input {
-    min-height: 60px;
-    resize: vertical; /* Allow vertical resizing */
-}
-
-#announce-live-form button,
-#live-comment-input-area button,
-#live-control button {
-    background-color: #28a745; /* Green for announcement/send */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-#announce-live-form button:hover,
-#live-comment-input-area button:hover,
-#live-control button:hover {
-    background-color: #218838;
-}
-
-#rtmp-key-container {
-    background-color: #f0f2f5;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-    border: 1px dashed #ccc;
-}
-
-#rtmp-key-container code {
-    background-color: #e9e9eb;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.9em;
-    color: #333;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-#rtmp-key-container input {
-    width: calc(100% - 20px);
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-}
-
-#rtmp-key-container button {
-    margin-top: 10px;
-}
-
-#live-player-container {
-    background-color: #000;
-    width: 100%;
-    height: 360px; /* Aspect ratio 16:9 for video */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    border-radius: 8px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.live-player-placeholder p {
-    color: #ccc;
-}
-
-#live-messages-container {
-    max-height: 250px; /* Scrollable chat area */
-    overflow-y: auto;
-    border: 1px solid #eee;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #fff;
-    margin-top: 15px;
-}
-
-.live-comment-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 5px;
-    border-bottom: 1px dashed #eee;
-    font-size: 0.9em;
-}
-
-.live-comment-item:last-child {
-    border-bottom: none;
-}
-
-.comment-user-photo {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 8px;
-}
-
-.comment-username {
-    font-weight: bold;
-    color: #4267B2;
-    margin-right: 5px;
-}
-
-.comment-text {
-    flex-grow: 1;
-    color: #333;
-}
-
-.comment-timestamp {
-    font-size: 0.75em;
-    color: #888;
-    margin-left: 10px;
-    white-space: nowrap; /* Prevent wrapping */
-}
-
-#live-comment-input-area {
-    display: flex;
-    margin-top: 10px;
-}
-
-#live-comment-input-area textarea {
-    flex-grow: 1;
-    margin-bottom: 0; /* Remove default margin */
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    min-height: 40px; /* Smaller default height for comment input */
-}
-
-#live-comment-input-area button {
-    padding: 10px 15px;
-    margin-bottom: 0; /* Remove default margin */
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-/* Profile Live Events Section */
-#my-live-events-container {
-    margin-top: 15px;
-}
-
-.live-event-profile-item {
-    padding: 15px;
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.live-event-profile-item h4 {
-    color: #007bff;
-    margin-top: 0;
-    margin-bottom: 8px;
-}
-
-.live-event-profile-item p {
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.announcement-actions button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.8em;
-    margin-top: 10px;
-    margin-right: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.announcement-actions button:hover {
-    background-color: #0056b3;
-}
-
-.announcement-actions .delete-announcement-btn {
-    background-color: #dc3545;
-}
-.announcement-actions .delete-announcement-btn:hover {
-    background-color: #c82333;
-}
-
-/* Hide image input in posts (as per request) */
-#post-image-input {
-    display: none !important;
-}
-
-/* Adjust post-create button for no image input */
-#post-create button {
-    margin-top: 0; /* Remove extra margin if image input is hidden */
 }

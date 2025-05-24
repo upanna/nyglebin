@@ -1,71 +1,41 @@
-// postlist.js
-// Firebase instances and helper functions (auth, db, debugLog) are globally available.
+// js/postlist.js
+import { db } from './config.js';
+import { showDebugMessage } from './auth.js';
 
-const postTitlesContainer = document.getElementById('titles-container');
-const btnLogoutPostlist = document.getElementById('btn-logout-postlist');
-const userDisplayPostlist = document.getElementById('user-display-postlist');
-const debugMsgPostlist = document.getElementById('debug-msg-postlist');
-const myProfileLink = document.getElementById('my-profile-link');
+document.addEventListener('DOMContentLoaded', () => {
+    const titlesContainer = document.getElementById('titles-container');
 
-
-// Logout
-btnLogoutPostlist.addEventListener('click', () => {
-    auth.signOut().then(() => {
-        window.location.href = 'index.html';
-    }).catch(error => {
-        debugLog('Logout error: ' + error.message, 'debug-msg-postlist');
-        console.error('Logout error:', error);
-    });
-});
-
-// Auth state handling
-auth.onAuthStateChanged(user => {
-    if (user) {
-        userDisplayPostlist.textContent = user.displayName || user.email;
-        btnLogoutPostlist.style.display = 'inline-block';
-        myProfileLink.href = `profile.html?uid=${user.uid}`;
-    } else {
-        userDisplayPostlist.textContent = '';
-        btnLogoutPostlist.style.display = 'none';
-        myProfileLink.href = `profile.html`;
-    }
-    loadPostTitles();
-});
-
-function loadPostTitles() {
-    postTitlesContainer.innerHTML = '<p style="text-align:center; color:#666; font-style: italic;">Loading post titles...</p>';
-    db.collection('posts').orderBy('createdAt', 'desc').onSnapshot({
-        next: (snapshot) => {
-            postTitlesContainer.innerHTML = '';
+    async function fetchAllPostTitles() {
+        if (!titlesContainer) return;
+        titlesContainer.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Loading posts...</p>';
+        try {
+            const snapshot = await db.collection('posts').orderBy('timestamp', 'desc').get(); // Get all posts
             if (snapshot.empty) {
-                postTitlesContainer.innerHTML = '<p style="text-align:center; color:#666;">No posts yet.</p>';
+                titlesContainer.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No posts available yet.</p>';
                 return;
             }
-            const ul = document.createElement('ul');
+            titlesContainer.innerHTML = '<ul></ul>';
+            const ul = titlesContainer.querySelector('ul');
             snapshot.forEach(doc => {
                 const post = doc.data();
                 const postId = doc.id;
                 const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = `index.html#post-${postId}`; // Link to the specific post on home page
-                a.textContent = post.text.substring(0, 100) + (post.text.length > 100 ? '...' : ''); // Show first 100 chars as title
-
-                const meta = document.createElement('div');
-                meta.className = 'post-title-meta';
-                const date = post.createdAt ? new Date(post.createdAt.toDate()).toLocaleDateString() : 'Unknown Date';
-                meta.textContent = `by ${post.userName || 'Anonymous'} on ${date}`;
-
-                li.appendChild(a);
-                li.appendChild(meta);
+                li.className = 'post-list-item'; // Add a class for styling
+                li.innerHTML = `
+                    <a href="post.html?id=${postId}">
+                        <strong>${post.title}</strong>
+                        <br>
+                        <small>by ${post.authorName || 'Anonymous'} on ${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString() : 'N/A'}</small>
+                    </a>
+                `;
                 ul.appendChild(li);
             });
-            postTitlesContainer.appendChild(ul);
-            debugLog(`Loaded ${snapshot.size} post titles.`, 'debug-msg-postlist');
-        },
-        error: (err) => {
-            postTitlesContainer.innerHTML = '<p style="text-align:center; color:red;">Failed to load post titles.</p>';
-            debugLog('Error loading post titles: ' + err.message, 'debug-msg-postlist');
-            console.error('Error loading post titles:', err);
+        } catch (error) {
+            console.error('Error fetching all post titles:', error);
+            titlesContainer.innerHTML = `<p style="color: red; text-align: center;">Error loading posts: ${error.message}</p>`;
+            showDebugMessage('Error loading all posts: ' + error.message, 'error');
         }
-    });
-}
+    }
+
+    fetchAllPostTitles(); // Initial fetch when the page loads
+});

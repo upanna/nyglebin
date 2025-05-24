@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Upanna - Messages</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,52 +12,77 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
+                <li><a href="live.html">Live</a></li>
                 <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-                <li><a href="chat.html">Chatroom</a></li>
-                <li><a href="postlist.html">Postlist</a></li>
-                <li><a href="message.html">Message</a></li>
-                <li><a href="about.html">About</a></li>
+                <li><a href="postlist.html">Post</a></li> <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li> <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li> <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
         <div id="auth-section">
-            <span id="user-display-message"></span>
-            <button id="btn-logout-message">Logout</button>
+            <span id="user-display"></span>
+            <button id="btn-login">Login</button>
+            <button id="btn-logout" style="display:none;">Logout</button>
         </div>
     </header>
 
-    <main class="main-layout message-layout">
-        <aside class="left-sidebar message-sidebar">
-            <section id="debug-msg-message" class="debug-msg" style="display: none;"></section>
-            <section id="user-contacts" class="card">
-                <h3>My Contacts</h3>
-                <div id="contact-list">
-                    <p style="text-align: center; color: #666; font-style: italic;">Loading contacts...</p>
-                </div>
-            </section>
-        </aside>
+    <main class="main-layout center-content-only">
+        <section id="debug-msg" class="debug-msg"></section> <section class="card" id="messages-section">
+            <h2>Your Messages</h2>
+            <div id="message-login-prompt" style="text-align: center; padding: 20px;">
+                <p>Please <button class="link-button" id="open-login-modal">log in</button> to view and send messages.</p>
+            </div>
 
-        <div class="center-content message-content">
-            <section id="chat-window" class="card" style="display:none;">
-                <h2 id="current-chat-user-name">Select a contact to chat</h2>
-                <div id="private-messages">
+            <div id="message-interface" style="display:none;"> <div id="conversation-list"> <h3>Conversations</h3>
+                    <div id="conversations-container">
+                        <p style="text-align: center; color: #666; font-style: italic;">Loading conversations...</p>
                     </div>
-                <div id="private-message-input-area">
-                    <input type="text" id="private-message-input" placeholder="Type a message..." disabled />
-                    <button id="send-private-message-btn" disabled>Send</button>
                 </div>
-            </section>
-        </div>
+
+                <div id="active-conversation"> <h3 id="recipient-name">Select a conversation or start a new one</h3>
+                    <div id="messages-container"> <p style="text-align: center; color: #666; font-style: italic;">No messages in this conversation.</p>
+                    </div>
+                    <div id="message-input-area"> <textarea id="message-text-input" placeholder="Type your message..." rows="2"></textarea> <button id="send-message-btn">Send</button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <div id="auth-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <div class="modal-container">
+            <button class="modal-close" aria-label="Close">×</button>
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+                <label for="email-input">Email</label>
+                <input type="email" id="email-input" required autocomplete="username" />
+                <label for="password-input">Password</label>
+                <input type="password" id="password-input" required autocomplete="current-password" />
+                <div id="name-field-container" style="display:none;">
+                    <label for="name-input">Display Name</label>
+                    <input type="text" id="name-input" autocomplete="name" />
+                </div>
+                <button type="submit" id="auth-submit">Login</button>
+                <p id="auth-error-msg" style="color: red;"></p>
+            </form>
+            <div id="switch-auth">Don't have an account? Sign Up</div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2025 PageBook. All rights reserved.</p>
+        <p>&copy; 2025 Upanna. All rights reserved.</p>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
-    <script src="message.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+    <script src="js/firebase_config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/postlist.js"></script>
+    <script src="js/chatroom.js"></script>
+    <script src="js/message.js"></script>
+    <script src="js/profile.js"></script>
 </body>
 </html>

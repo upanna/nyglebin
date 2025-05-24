@@ -12,8 +12,9 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
+                <li><a href="live.html">Live</a></li>
                 <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="chatroom.html">Chatroom</a></li>
                 <li><a href="postlist.html">Postlist</a></li>
                 <li><a href="message.html">Message</a></li>
                 <li><a href="about.html">About</a></li>
@@ -21,30 +22,38 @@
             </ul>
         </nav>
         <div id="auth-section">
-            <span id="user-display-postlist"></span>
-            <button id="btn-logout-postlist">Logout</button>
+            <span id="user-display"></span>
+            <button id="btn-login">Login</button>
+            <button id="btn-logout" style="display:none;">Logout</button>
         </div>
     </header>
 
-    <main>
-        <section id="debug-msg-postlist" class="debug-msg" style="display: none;"></section>
+    <main class="main-layout center-content-only">
+        <section id="debug-msg" class="debug-msg" style="display: none;"></section>
 
-        <section id="post-titles-list" class="card">
-            <h2>All Post Titles</h2>
-            <div id="titles-container">
-                <p style="text-align:center; color:#666; font-style: italic;">Loading post titles...</p>
+        <section id="post-titles-section" class="card">
+            <h2>All Posts</h2>
+            <div id="post-list-container">
+                <p style="text-align: center; color: #666; font-style: italic;">Loading posts...</p>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 PageBook. All rights reserved.</p>
+        <p>&copy; 2024 Upanna. All rights reserved.</p>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
-    <script src="postlist.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+    <script src="js/firebase_config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/postlist.js"></script>
+    <script src="js/chatroom.js"></script>
+    <script src="js/message.js"></script>
+    <script src="js/profile.js"></script>
 </body>
 </html>

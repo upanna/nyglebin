@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Upanna - User Profile</title>
+    <title>Upanna - Chatroom</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,26 +26,17 @@
     </header>
 
     <main class="main-layout center-content-only">
-        <section id="debug-msg" class="debug-msg"></section> <div class="profile-page-layout"> <section id="profile-header" class="card">
-                <div id="profile-avatar-container">
-                    <div class="user-avatar-large"></div>
-                </div>
-                <h2 id="profile-display-name">Loading Profile...</h2>
-                <p id="profile-email" style="color: #666;"></p>
-                <div id="profile-actions" style="margin-top: 15px;">
-                    <button id="btn-message-user" style="display:none;">Message</button>
-                </div>
-            </section>
-
-            <section id="user-posts" class="card">
-                <h3>Posts by <span id="posts-author-name"></span></h3>
-                <div id="user-posts-list">
-                    <p style="text-align: center; color: #666; font-style: italic;">Loading posts...</p>
-                </div>
-            </section>
-        </div>
-
-        </main>
+        <section id="debug-msg" class="debug-msg"></section> <section class="card">
+            <h2>Public Chatroom</h2>
+            <div id="chat-messages-container"> <p style="text-align: center; color: #666; font-style: italic;">Loading messages...</p>
+            </div>
+            <div id="chat-input-area" style="display:none;"> <textarea id="chat-message-input" placeholder="Type your message..." rows="2"></textarea> <button id="send-chat-btn">Send</button>
+            </div>
+            <p id="chat-login-msg" style="text-align:center; color:#888; margin-top: 10px; display:block;">
+                Please log in to send messages.
+            </p>
+        </section>
+    </main>
 
     <div id="auth-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div class="modal-container">

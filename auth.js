@@ -1,186 +1,197 @@
-// js/auth.js
+// Ensure Firebase is initialized before using it
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Firebase service instances (imported from config.js implicitly as they are global)
-// Ensure window.auth and window.db are defined in config.js and loaded before this script.
-// If config.js is properly set up, 'auth' and 'db' will be available directly.
-// For robustness, using window.auth and window.db is safer.
-
-const authModal = document.getElementById('auth-modal');
-const authForm = document.getElementById('auth-form');
-const authTitle = document.getElementById('auth-title');
-const authSubmitBtn = document.getElementById('auth-submit');
-const switchAuthBtn = document.getElementById('switch-auth');
-const authErrorMsg = document.getElementById('auth-error-msg');
-const emailInput = document.getElementById('email-input');
-const passwordInput = document.getElementById('password-input');
-const nameFieldContainer = document.getElementById('name-field-container');
-const nameInput = document.getElementById('name-input');
-const modalCloseBtn = document.querySelector('#auth-modal .modal-close');
-
-let isSignUp = false; // To toggle between login and signup
-
-// Function to display authentication errors
-function displayAuthError(message) {
-    authErrorMsg.textContent = message;
-    authErrorMsg.style.display = 'block';
-    setTimeout(() => {
-        authErrorMsg.style.display = 'none';
-        authErrorMsg.textContent = '';
-    }, 5000);
+// Helper function to show debug messages
+function showDebugMessage(message, type, elementId = 'debug-msg') {
+    const debugMsgElement = document.getElementById(elementId);
+    if (debugMsgElement) {
+        debugMsgElement.textContent = message;
+        debugMsgElement.className = `debug-msg ${type}`; // Add type for styling (e.g., 'error', 'success')
+        debugMsgElement.style.display = 'block';
+        // Hide after 5 seconds
+        setTimeout(() => {
+            debugMsgElement.style.display = 'none';
+        }, 5000);
+    }
 }
 
-// Event listener for showing the modal (if a login button exists on the page)
-// This assumes an element with id="btn-login" exists on the page to trigger the modal.
 document.addEventListener('DOMContentLoaded', () => {
+    // Get UI elements
+    const authSection = document.getElementById('auth-section');
+    const userDisplay = document.getElementById('user-display');
     const btnLogin = document.getElementById('btn-login');
+    const btnLogout = document.getElementById('btn-logout');
+    const myProfileLink = document.getElementById('my-profile-link'); // Link to user's profile
+    const navChatroomLink = document.getElementById('nav-chatroom-link'); // Added for chatroom link
+    const navMessageLink = document.getElementById('nav-message-link'); // Added for message link
+
+    // Auth Modal elements
+    const authModal = document.getElementById('auth-modal');
+    const modalClose = authModal ? authModal.querySelector('.modal-close') : null;
+    const authForm = document.getElementById('auth-form');
+    const emailInput = document.getElementById('email-input');
+    const passwordInput = document.getElementById('password-input');
+    const nameFieldContainer = document.getElementById('name-field-container');
+    const nameInput = document.getElementById('name-input');
+    const authSubmitBtn = document.getElementById('auth-submit');
+    const authErrorMsg = document.getElementById('auth-error-msg');
+    const switchAuthLink = document.getElementById('switch-auth');
+
+    let isSignUp = false; // To toggle between login and sign-up
+
+    // Listen for authentication state changes
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            // User is logged in
+            userDisplay.textContent = user.displayName || user.email;
+            if (btnLogin) btnLogin.style.display = 'none';
+            if (btnLogout) btnLogout.style.display = 'inline-block';
+            if (myProfileLink) myProfileLink.href = `profile.html?uid=${user.uid}`;
+            if (authSection) authSection.style.display = 'flex'; // Ensure auth section is visible
+
+            // Show Chatroom and Message links if logged in
+            if (navChatroomLink) navChatroomLink.style.display = 'list-item'; // Or 'block' depending on CSS
+            if (navMessageLink) navMessageLink.style.display = 'list-item'; // Or 'block'
+
+            // Hide the modal if it's open
+            if (authModal) authModal.style.display = 'none';
+
+        } else {
+            // User is logged out
+            userDisplay.textContent = '';
+            if (btnLogin) btnLogin.style.display = 'inline-block';
+            if (btnLogout) btnLogout.style.display = 'none';
+            if (myProfileLink) myProfileLink.href = `profile.html`; // Default for non-logged in users
+            if (authSection) authSection.style.display = 'flex'; // Ensure auth section is visible
+
+            // Hide Chatroom and Message links if logged out
+            if (navChatroomLink) navChatroomLink.style.display = 'none';
+            if (navMessageLink) navMessageLink.style.display = 'none';
+        }
+    });
+
+    // Event listener for the main login button
     if (btnLogin) {
         btnLogin.addEventListener('click', () => {
-            authModal.style.display = 'block';
-            isSignUp = false;
-            authTitle.textContent = 'Login';
-            authSubmitBtn.textContent = 'Login';
-            switchAuthBtn.textContent = "Don't have an account? Sign Up";
-            nameFieldContainer.style.display = 'none'; // Hide name field for login
-            authErrorMsg.textContent = ''; // Clear previous errors
+            if (authModal) {
+                authModal.style.display = 'flex'; // Show the modal
+                authErrorMsg.textContent = ''; // Clear previous errors
+                nameFieldContainer.style.display = 'none'; // Hide name field for default login
+                authSubmitBtn.textContent = 'Login';
+                if (switchAuthLink) switchAuthLink.textContent = "Don't have an account? Sign Up";
+                isSignUp = false;
+                authForm.reset(); // Clear form fields
+            }
         });
     }
-});
 
-
-// Close modal button
-if (modalCloseBtn) {
-    modalCloseBtn.addEventListener('click', () => {
-        authModal.style.display = 'none';
-        authErrorMsg.textContent = ''; // Clear errors when closing
-    });
-}
-
-// Close modal when clicking outside
-window.addEventListener('click', (event) => {
-    if (event.target === authModal) {
-        authModal.style.display = 'none';
-        authErrorMsg.textContent = ''; // Clear errors when closing
+    // Event listener for modal close button
+    if (modalClose) {
+        modalClose.addEventListener('click', () => {
+            if (authModal) {
+                authModal.style.display = 'none'; // Hide the modal
+                authErrorMsg.textContent = ''; // Clear errors
+                authForm.reset(); // Reset form
+            }
+        });
     }
-});
 
-// Toggle between Login and Sign Up
-if (switchAuthBtn) {
-    switchAuthBtn.addEventListener('click', () => {
-        isSignUp = !isSignUp;
-        if (isSignUp) {
-            authTitle.textContent = 'Sign Up';
-            authSubmitBtn.textContent = 'Sign Up';
-            switchAuthBtn.textContent = 'Already have an account? Login';
-            nameFieldContainer.style.display = 'block'; // Show name field for signup
-        } else {
-            authTitle.textContent = 'Login';
-            authSubmitBtn.textContent = 'Login';
-            switchAuthBtn.textContent = "Don't have an account? Sign Up";
-            nameFieldContainer.style.display = 'none'; // Hide name field for login
-        }
-        authErrorMsg.textContent = ''; // Clear errors when switching
-    });
-}
+    // Close modal if clicking outside
+    if (authModal) {
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.style.display = 'none';
+                authErrorMsg.textContent = ''; // Clear errors
+                authForm.reset(); // Reset form
+            }
+        });
+    }
 
-// Handle form submission (Login or Sign Up)
-if (authForm) {
-    authForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const email = emailInput.value;
-        const password = passwordInput.value;
-        const displayName = nameInput.value;
-
-        if (typeof window.auth === 'undefined' || typeof window.db === 'undefined') {
-            console.error("Firebase Auth or Firestore not initialized. Check config.js and script loading order.");
-            displayAuthError("App initialization error. Please try again later.");
-            return;
-        }
-
-        try {
+    // Toggle between Login and Sign Up forms
+    if (switchAuthLink) {
+        switchAuthLink.addEventListener('click', () => {
+            isSignUp = !isSignUp;
             authErrorMsg.textContent = ''; // Clear previous errors
 
             if (isSignUp) {
-                const userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-
-                // Update user profile with display name
-                if (displayName) {
-                    await user.updateProfile({ displayName: displayName });
-                }
-
-                // Save user data to Firestore
-                await window.db.collection('users').doc(user.uid).set({
-                    email: user.email,
-                    displayName: displayName || user.email, // Default to email if no display name
-                    photoURL: user.photoURL || 'images/default-profile.png', // Set default profile picture
-                    createdAt: window.firebase.firestore.FieldValue.serverTimestamp() // Use FieldValue
-                });
-                window.debugLog("User registered successfully!", "debug-msg"); // Use window.debugLog
+                authModal.querySelector('h2').textContent = 'Sign Up';
+                nameFieldContainer.style.display = 'block'; // Show name field for sign up
+                authSubmitBtn.textContent = 'Sign Up';
+                switchAuthLink.textContent = 'Already have an account? Login';
             } else {
-                await window.auth.signInWithEmailAndPassword(email, password);
-                window.debugLog("User logged in successfully!", "debug-msg"); // Use window.debugLog
+                authModal.querySelector('h2').textContent = 'Login';
+                nameFieldContainer.style.display = 'none'; // Hide name field for login
+                authSubmitBtn.textContent = 'Login';
+                switchAuthLink.textContent = "Don't have an account? Sign Up";
             }
-            authModal.style.display = 'none'; // Close modal on success
-            authForm.reset(); // Clear form
-        } catch (error) {
-            console.error('Authentication Error:', error.code, error.message);
-            // Display user-friendly messages for common Firebase auth errors
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    displayAuthError('This email is already in use. Please use a different email or login.');
-                    break;
-                case 'auth/invalid-email':
-                    displayAuthError('The email address is not valid.');
-                    break;
-                case 'auth/operation-not-allowed':
-                    displayAuthError('Email/password accounts are not enabled. Please contact support.');
-                    break;
-                case 'auth/weak-password':
-                    displayAuthError('The password is too weak. Please use a stronger password.');
-                    break;
-                case 'auth/user-not-found':
-                case 'auth/wrong-password':
-                    displayAuthError('Incorrect email or password. Please try again.');
-                    break;
-                case 'auth/network-request-failed':
-                    displayAuthError('Network error. Please check your internet connection.');
-                    break;
-                default:
-                    displayAuthError('An unexpected error occurred. Please try again.');
-            }
-        }
-    });
-}
-
-// Handle Logout for pages that have their own logout button (e.g., about.html, contact.html)
-// This is for pages that don't use the main app.js logout listener
-function setupLogoutButton(buttonId, redirectPage = 'index.html') {
-    const btnLogout = document.getElementById(buttonId);
-    if (btnLogout) {
-        btnLogout.addEventListener('click', () => {
-            if (typeof window.auth === 'undefined') {
-                console.error("Firebase Auth not initialized. Cannot logout.");
-                window.debugLog("Logout error: Auth not ready.", "debug-msg"); // Use window.debugLog
-                return;
-            }
-            window.auth.signOut().then(() => {
-                window.debugLog("Logged out successfully!", "debug-msg"); // Use window.debugLog
-                window.location.href = redirectPage; // Redirect to specified page
-            }).catch(error => {
-                console.error('Logout Error:', error);
-                window.debugLog(`Logout failed: ${error.message}`, "debug-msg"); // Use window.debugLog
-            });
+            authForm.reset(); // Clear form fields when switching
         });
     }
-}
 
-// Call setupLogoutButton for relevant pages
-document.addEventListener('DOMContentLoaded', () => {
-    // Check for specific logout buttons on different pages
-    setupLogoutButton('btn-logout-about', 'index.html');
-    setupLogoutButton('btn-logout-contact', 'index.html');
-    setupLogoutButton('btn-logout-message', 'index.html');
-    setupLogoutButton('btn-logout-postlist', 'index.html');
-    setupLogoutButton('btn-logout', 'index.html'); // For index.html, profile.html, chat.html, live.html
+    // Handle form submission (Login/Sign Up)
+    if (authForm) {
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            const displayName = nameInput.value;
+
+            if (isSignUp) {
+                // Sign Up
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(cred => {
+                        return cred.user.updateProfile({
+                            displayName: displayName
+                        }).then(() => {
+                            // Also create a user document in Firestore
+                            return db.collection('users').doc(cred.user.uid).set({
+                                displayName: displayName,
+                                email: email,
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                profilePictureUrl: '' // Default empty profile picture
+                            });
+                        });
+                    })
+                    .then(() => {
+                        authModal.style.display = 'none';
+                        showDebugMessage('Successfully signed up and logged in!', 'success');
+                        authForm.reset();
+                    })
+                    .catch(error => {
+                        console.error("Sign up error:", error);
+                        authErrorMsg.textContent = error.message;
+                    });
+            } else {
+                // Login
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        authModal.style.display = 'none';
+                        showDebugMessage('Successfully logged in!', 'success');
+                        authForm.reset();
+                    })
+                    .catch(error => {
+                        console.error("Login error:", error);
+                        authErrorMsg.textContent = error.message;
+                    });
+            }
+        });
+    }
+
+    // Handle Logout
+    if (btnLogout) {
+        btnLogout.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    // Redirect to home or update UI
+                    showDebugMessage('Logged out successfully!', 'success');
+                    window.location.href = 'index.html'; // Or simply update UI
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    showDebugMessage('Logout failed: ' + error.message, 'error');
+                });
+        });
+    }
 });

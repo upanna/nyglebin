@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PageBook - About</title>
-    <link rel="stylesheet" href="style.css"> 
+    <title>Upanna - About</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
@@ -12,8 +12,9 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
+                <li><a href="live.html">Live</a></li>
                 <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="chatroom.html">Chatroom</a></li>
                 <li><a href="postlist.html">Postlist</a></li>
                 <li><a href="message.html">Message</a></li>
                 <li><a href="about.html">About</a></li>
@@ -21,55 +22,41 @@
             </ul>
         </nav>
         <div id="auth-section">
-            <span id="user-display-about"></span>
-            <button id="btn-logout-about">Logout</button>
+            <span id="user-display"></span>
+            <button id="btn-login">Login</button>
+            <button id="btn-logout" style="display:none;">Logout</button>
         </div>
     </header>
 
-    <main>
-        <section id="debug-msg-about" class="debug-msg" style="display: none;"></section>
+    <main class="main-layout center-content-only">
+        <section id="debug-msg" class="debug-msg" style="display: none;"></section>
         <section class="card" style="padding: 25px;">
             <h2>About Upanna</h2>
-            <p><br/>Welcome to Upanna! This is a simple social media platform built with a database, created for literature lovers and for purposes related to religion, social issues, and education, without focusing on photos and videos. It was developed by U Zinn Panna (Web Developer) by combining modern and evolving technologies in programming.</p>
-            <p>You can create text-based posts text only without images and videos., interact with other members, and use our general chatroom. For private conversations, check out the "Message" section!</p><br/>
-            <h3>Our Mission</h3>
-            <p>Although it may not have the capabilities of a powerful social media website like Facebook, it was created based on the system of a web application using modern web technologies and website backend. This creation serves as a resource for those interested in technology, literature enthusiasts, and writers, providing a platform for mutual support and knowledge sharing.</p>
-            <p>Thanks for visiting!</p>
+            <p>Welcome to Upanna, your platform for connecting, sharing, and discovering.</p>
+            <p>Our mission is to create a vibrant community where users can interact freely, share thoughts, and explore diverse content.</p>
+            <p>Whether you're here to chat, read posts, or connect with friends, we aim to provide a seamless and enjoyable experience.</p>
+            <p>Thank you for being a part of our journey!</p>
+            <div style="text-align: center; margin-top: 30px;">
+                <img src="1.JPG" alt="Upanna Community" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 Upanna. All rights reserved.</p>
+        <p>&copy; 2024 Upanna. All rights reserved.</p>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
-    <script>
-        // Basic auth state handling for About page
-        auth.onAuthStateChanged(user => {
-            const userDisplayAbout = document.getElementById('user-display-about');
-            const btnLogoutAbout = document.getElementById('btn-logout-about');
-            const myProfileLink = document.getElementById('my-profile-link');
-            if (user) {
-                userDisplayAbout.textContent = user.displayName || user.email;
-                btnLogoutAbout.style.display = 'inline-block';
-                myProfileLink.href = `profile.html?uid=${user.uid}`;
-            } else {
-                userDisplayAbout.textContent = '';
-                btnLogoutAbout.style.display = 'none';
-                myProfileLink.href = `profile.html`;
-            }
-        });
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 
-        btnLogoutAbout.addEventListener('click', () => {
-            auth.signOut().then(() => {
-                window.location.href = 'index.html';
-            }).catch(error => {
-                console.error('Logout error:', error);
-            });
-        });
-    </script>
+    <script src="js/firebase_config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/postlist.js"></script>
+    <script src="js/chatroom.js"></script>
+    <script src="js/message.js"></script>
+    <script src="js/profile.js"></script>
 </body>
 </html>

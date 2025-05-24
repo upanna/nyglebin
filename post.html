@@ -3,48 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upanna - Live</title>
+    <title>Upanna - Post Detail</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Upanna</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="live.html">Live</a></li>
-                <li><a href="profile.html">Profile</a></li>
-                <li><a href="postlist.html">Post</a></li>
-                <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li>
-                <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
-        <div id="auth-section">
-            <span id="user-display"></span>
-            <button id="btn-login">Login</button>
-            <button id="btn-logout" style="display:none;">Logout</button>
-        </div>
-    </header>
+   <header>
+    <h1>Upanna</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live.html">Live</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="postlist.html">Post</a></li>
+            <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li>
+            <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    <div id="auth-section">
+        <span id="user-display"></span>
+        <button id="btn-login">Login</button>
+        <button id="btn-logout" style="display:none;">Logout</button>
+    </div>
+</header>
 
     <main class="main-layout center-content-only">
         <section id="debug-msg" class="debug-msg"></section>
 
-        <section class="card">
-            <h2>Live Updates & Users</h2>
-            <div id="live-users-container">
-                <h3>Currently Online</h3>
-                <div id="online-users-list">
-                    <p style="text-align: center; color: #666; font-style: italic;">Loading online users...</p>
-                    </div>
+        <section id="post-detail-section" class="card">
+            <h2 id="post-title">Loading Post...</h2>
+            <p id="post-meta" class="post-meta">Loading details...</p>
+            <div id="post-content-display" style="margin-top: 20px;">
+                <p>Loading content...</p>
             </div>
 
-            <div id="live-events-container" style="margin-top: 30px;">
-                <h3>Real-time Events / Streams</h3>
-                <div id="events-list">
-                    <p style="text-align: center; color: #666; font-style: italic;">No live events or streams currently active.</p>
-                    </div>
+            <div id="post-actions" class="post-actions" style="display: none;">
+                <button id="like-post-btn" data-post-id="">Like (<span id="like-count">0</span>)</button>
+                <button id="dislike-post-btn" data-post-id="">Dislike (<span id="dislike-count">0</span>)</button>
+            </div>
+
+            <div id="comments-section" class="comments-section" style="display: none;">
+                <h3>Comments (<span id="comment-count">0</span>)</h3>
+                <div id="comments-list" class="comments-list">
+                    <p style="text-align:center; color:#666; font-style: italic;">No comments yet.</p>
+                </div>
+                <div id="comment-input-area" class="comment-input-area" style="display: none;">
+                    <textarea id="comment-text-input" placeholder="Write a comment..." rows="3"></textarea>
+                    <button id="send-comment-btn">Comment</button>
+                </div>
+                <p id="comment-login-prompt" style="text-align: center; color: #666; margin-top: 15px;">Please login to comment.</p>
             </div>
         </section>
     </main>

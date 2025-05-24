@@ -12,8 +12,9 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
+                <li><a href="live.html">Live</a></li>
                 <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="chatroom.html">Chatroom</a></li>
                 <li><a href="postlist.html">Postlist</a></li>
                 <li><a href="message.html">Message</a></li>
                 <li><a href="about.html">About</a></li>
@@ -21,54 +22,73 @@
             </ul>
         </nav>
         <div id="auth-section">
-            <span id="user-display-contact"></span>
-            <button id="btn-logout-contact">Logout</button>
+            <span id="user-display"></span>
+            <button id="btn-login">Login</button>
+            <button id="btn-logout" style="display:none;">Logout</button>
         </div>
     </header>
 
-    <main>
-        <section id="debug-msg-contact" class="debug-msg" style="display: none;"></section>
+    <main class="main-layout center-content-only">
+        <section id="debug-msg" class="debug-msg" style="display: none;"></section>
         <section class="card" style="padding: 25px;">
             <h2>Contact Us</h2>
-            <p>If you have any questions, feedback, or suggestions, feel free to reach out to us!</p>
-            <p><strong>Email:</strong> support@pagebook.com</p>
-            <p><strong>Phone:</strong> +95 9 33913388</p>
-            <p><strong>Address:</strong> Shwehinnthar Center, Shwehinnthar St, Myo Ma -5, Nyaunglebin, Bago, Myanmar</p>
-            <p>We appreciate your interest in PageBook!</p>
+            <p>If you have any questions, feedback, or inquiries, feel free to reach out to us:</p>
+            <ul>
+                <li><strong>Email:</strong> support@upanna.com</li>
+                <li><strong>Phone:</strong> +95 9 123 456 789</li>
+                <li><strong>Address:</strong> 123 Main Street, Yangon, Myanmar</li>
+            </ul>
+            <p>You can also send us a message directly using the form below:</p>
+            <form id="contact-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit">Send Message</button>
+            </form>
+            <p id="form-status" style="margin-top: 15px; text-align: center;"></p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 PageBook. All rights reserved.</p>
+        <p>&copy; 2024 Upanna. All rights reserved.</p>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="config.js"></script>
-    <script>
-        // Basic auth state handling for Contact page
-        auth.onAuthStateChanged(user => {
-            const userDisplayContact = document.getElementById('user-display-contact');
-            const btnLogoutContact = document.getElementById('btn-logout-contact');
-            const myProfileLink = document.getElementById('my-profile-link');
-            if (user) {
-                userDisplayContact.textContent = user.displayName || user.email;
-                btnLogoutContact.style.display = 'inline-block';
-                myProfileLink.href = `profile.html?uid=${user.uid}`;
-            } else {
-                userDisplayContact.textContent = '';
-                btnLogoutContact.style.display = 'none';
-                myProfileLink.href = `profile.html`;
-            }
-        });
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 
-        btnLogoutContact.addEventListener('click', () => {
-            auth.signOut().then(() => {
-                window.location.href = 'index.html';
-            }).catch(error => {
-                console.error('Logout error:', error);
-            });
+    <script src="js/firebase_config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script> <script>
+        // Example for contact form submission (you might integrate this with Firebase if needed)
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contact-form');
+            const formStatus = document.getElementById('form-status');
+
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    formStatus.textContent = 'Sending message...';
+                    formStatus.style.color = 'blue';
+
+                    // Simulate sending email/message
+                    setTimeout(() => {
+                        formStatus.textContent = 'Message sent successfully!';
+                        formStatus.style.color = 'green';
+                        contactForm.reset();
+                    }, 1500);
+                });
+            }
         });
     </script>
 </body>
