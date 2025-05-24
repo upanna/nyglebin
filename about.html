@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upanna - About</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
     <header>
@@ -21,42 +21,100 @@
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
-        <div id="auth-section">
-            <span id="user-display"></span>
-            <button id="btn-login">Login</button>
-            <button id="btn-logout" style="display:none;">Logout</button>
+        <div id="auth-section-about">
+            <span id="user-display-about"></span>
+            <button id="btn-login-about">Login</button>
+            <button id="btn-logout-about" style="display:none;">Logout</button>
         </div>
     </header>
 
     <main class="main-layout center-content-only">
-        <section id="debug-msg" class="debug-msg" style="display: none;"></section>
+        <section id="debug-msg-about" class="debug-msg" style="display: none;"></section>
         <section class="card" style="padding: 25px;">
             <h2>About Upanna</h2>
-            <p>Welcome to Upanna, your platform for connecting, sharing, and discovering.</p>
-            <p>Our mission is to create a vibrant community where users can interact freely, share thoughts, and explore diverse content.</p>
-            <p>Whether you're here to chat, read posts, or connect with friends, we aim to provide a seamless and enjoyable experience.</p>
-            <p>Thank you for being a part of our journey!</p>
-            <div style="text-align: center; margin-top: 30px;">
-                <img src="1.JPG" alt="Upanna Community" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            </div>
+            <p>
+                Welcome to Upanna, your vibrant online community! We believe in fostering connections, sharing ideas, and creating a space where everyone feels heard and valued.
+            </p>
+            <p>
+                Our platform is designed to bring people together through dynamic features like real-time chat, engaging post lists, and personalized user profiles. Whether you're here to connect with friends, discover new perspectives, or simply share your thoughts with the world, Upanna offers an intuitive and friendly environment.
+            </p>
+            <p>
+                Join us in building a positive and interactive digital experience. We're constantly working to improve and expand our features, always keeping our community's needs at heart.
+            </p>
         </section>
     </main>
 
+    <div id="auth-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <div class="modal-container">
+            <button class="modal-close" aria-label="Close">×</button>
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+                <label for="email-input">Email</label>
+                <input type="email" id="email-input" required autocomplete="username" />
+                <label for="password-input">Password</label>
+                <input type="password" id="password-input" required autocomplete="current-password" />
+                <div id="name-field-container" style="display:none;">
+                    <label for="name-input">Display Name</label>
+                    <input type="text" id="name-input" autocomplete="name" />
+                </div>
+                <button type="submit" id="auth-submit">Login</button>
+                <p id="auth-error-msg" style="color: red;"></p>
+            </form>
+            <div id="switch-auth">Don't have an account? Sign Up</div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2024 Upanna. All rights reserved.</p>
+        <p>&copy; 2025 Upanna. All rights reserved.</p>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
 
-    <script src="js/firebase_config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/postlist.js"></script>
-    <script src="js/chatroom.js"></script>
-    <script src="js/message.js"></script>
-    <script src="js/profile.js"></script>
+    <script type="module" src="js/firebase_config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/app.js"></script>
+    
+    <script type="module">
+        import { auth } from './js/firebase_config.js'; // Ensure this import is correct based on your setup
+        import { showDebugMessage } from './js/app.js'; // Assuming this function is in app.js or accessible
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userDisplay = document.getElementById('user-display-about');
+            const btnLogin = document.getElementById('btn-login-about');
+            const btnLogout = document.getElementById('btn-logout-about');
+            const myProfileLink = document.getElementById('my-profile-link');
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    userDisplay.textContent = user.displayName || user.email;
+                    btnLogin.style.display = 'none';
+                    btnLogout.style.display = 'inline-block';
+                    myProfileLink.href = `profile.html?uid=${user.uid}`;
+                } else {
+                    userDisplay.textContent = '';
+                    btnLogin.style.display = 'inline-block';
+                    btnLogout.style.display = 'none';
+                    myProfileLink.href = `profile.html`; // Default for non-logged in users
+                }
+            });
+
+            // If you want to open the login modal from a button on this page
+            document.getElementById('btn-login-about').addEventListener('click', () => {
+                document.getElementById('auth-modal').style.display = 'flex';
+            });
+            document.getElementById('btn-logout-about').addEventListener('click', () => {
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                }).catch(error => {
+                    console.error('Logout error:', error);
+                    showDebugMessage('Logout failed: ' + error.message, 'error', 'debug-msg-about');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

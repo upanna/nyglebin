@@ -21,72 +21,123 @@
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
-        <div id="auth-section">
-            <span id="user-display"></span>
-            <button id="btn-login">Login</button>
-            <button id="btn-logout" style="display:none;">Logout</button>
+        <div id="auth-section-contact">
+            <span id="user-display-contact"></span>
+            <button id="btn-login-contact">Login</button>
+            <button id="btn-logout-contact" style="display:none;">Logout</button>
         </div>
     </header>
 
     <main class="main-layout center-content-only">
-        <section id="debug-msg" class="debug-msg" style="display: none;"></section>
+        <section id="debug-msg-contact" class="debug-msg" style="display: none;"></section>
         <section class="card" style="padding: 25px;">
             <h2>Contact Us</h2>
-            <p>If you have any questions, feedback, or inquiries, feel free to reach out to us:</p>
-            <ul>
-                <li><strong>Email:</strong> support@upanna.com</li>
-                <li><strong>Phone:</strong> +95 9 123 456 789</li>
-                <li><strong>Address:</strong> 123 Main Street, Yangon, Myanmar</li>
-            </ul>
-            <p>You can also send us a message directly using the form below:</p>
+            <p>
+                We'd love to hear from you! Whether you have questions, feedback, or suggestions, please don't hesitate to reach out.
+            </p>
             <form id="contact-form">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="subject">Subject:</label>
-                <input type="text" id="subject" name="subject" required>
-
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
-
+                <div class="form-group">
+                    <label for="contact-name">Name:</label>
+                    <input type="text" id="contact-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email:</label>
+                    <input type="email" id="contact-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message:</label>
+                    <textarea id="contact-message" name="message" rows="5" required></textarea>
+                </div>
                 <button type="submit">Send Message</button>
             </form>
-            <p id="form-status" style="margin-top: 15px; text-align: center;"></p>
+            <div id="form-status-message" style="margin-top: 15px; color: green; display: none;"></div>
         </section>
     </main>
 
+    <div id="auth-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <div class="modal-container">
+            <button class="modal-close" aria-label="Close">×</button>
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+                <label for="email-input">Email</label>
+                <input type="email" id="email-input" required autocomplete="username" />
+                <label for="password-input">Password</label>
+                <input type="password" id="password-input" required autocomplete="current-password" />
+                <div id="name-field-container" style="display:none;">
+                    <label for="name-input">Display Name</label>
+                    <input type="text" id="name-input" autocomplete="name" />
+                </div>
+                <button type="submit" id="auth-submit">Login</button>
+                <p id="auth-error-msg" style="color: red;"></p>
+            </form>
+            <div id="switch-auth">Don't have an account? Sign Up</div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2024 Upanna. All rights reserved.</p>
+        <p>&copy; 2025 Upanna. All rights reserved.</p>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
 
-    <script src="js/firebase_config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script> <script>
-        // Example for contact form submission (you might integrate this with Firebase if needed)
+    <script type="module" src="js/firebase_config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/app.js"></script>
+
+    <script type="module">
+        import { auth } from './js/firebase_config.js'; // Ensure this import is correct based on your setup
+        import { showDebugMessage } from './js/app.js'; // Assuming this function is in app.js or accessible
+
         document.addEventListener('DOMContentLoaded', () => {
-            const contactForm = document.getElementById('contact-form');
-            const formStatus = document.getElementById('form-status');
+            const userDisplay = document.getElementById('user-display-contact');
+            const btnLogin = document.getElementById('btn-login-contact');
+            const btnLogout = document.getElementById('btn-logout-contact');
+            const myProfileLink = document.getElementById('my-profile-link');
 
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    userDisplay.textContent = user.displayName || user.email;
+                    btnLogin.style.display = 'none';
+                    btnLogout.style.display = 'inline-block';
+                    myProfileLink.href = `profile.html?uid=${user.uid}`;
+                } else {
+                    userDisplay.textContent = '';
+                    btnLogin.style.display = 'inline-block';
+                    btnLogout.style.display = 'none';
+                    myProfileLink.href = `profile.html`;
+                }
+            });
+
+            document.getElementById('btn-login-contact').addEventListener('click', () => {
+                document.getElementById('auth-modal').style.display = 'flex';
+            });
+            document.getElementById('btn-logout-contact').addEventListener('click', () => {
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                }).catch(error => {
+                    console.error('Logout error:', error);
+                    showDebugMessage('Logout failed: ' + error.message, 'error', 'debug-msg-contact');
+                });
+            });
+
+            // Handle contact form submission (if you have backend for it, otherwise it's just frontend validation)
+            const contactForm = document.getElementById('contact-form');
+            const formStatusMessage = document.getElementById('form-status-message');
             if (contactForm) {
                 contactForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    formStatus.textContent = 'Sending message...';
-                    formStatus.style.color = 'blue';
-
-                    // Simulate sending email/message
+                    // In a real application, you would send this data to a backend server (e.g., Firebase Functions, email service)
+                    // For now, just simulate success
+                    formStatusMessage.textContent = 'Message sent successfully!';
+                    formStatusMessage.style.display = 'block';
+                    contactForm.reset();
                     setTimeout(() => {
-                        formStatus.textContent = 'Message sent successfully!';
-                        formStatus.style.color = 'green';
-                        contactForm.reset();
-                    }, 1500);
+                        formStatusMessage.style.display = 'none';
+                    }, 5000);
                 });
             }
         });

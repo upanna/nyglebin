@@ -14,7 +14,10 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="live.html">Live</a></li>
                 <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-                <li><a href="postlist.html">Post</a></li> <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li> <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li> <li><a href="about.html">About</a></li>
+                <li><a href="chatroom.html">Chatroom</a></li>
+                <li><a href="postlist.html">Postlist</a></li>
+                <li><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
@@ -25,8 +28,9 @@
         </div>
     </header>
 
-    <main class="main-layout center-content-only">
-        <section id="debug-msg" class="debug-msg"></section> <div class="profile-page-layout"> <section id="profile-header" class="card">
+    <main class="main-layout">
+        <div class="center-content profile-page-layout">
+            <section id="profile-header" class="card">
                 <div id="profile-avatar-container">
                     <div class="user-avatar-large"></div>
                 </div>
@@ -44,8 +48,16 @@
                 </div>
             </section>
         </div>
-
-        </main>
+        <aside class="right-sidebar">
+            <section id="user-live-events" class="card">
+                <h3>Live Events by <span id="lives-host-name"></span></h3>
+                <div id="user-live-events-list">
+                    <p style="text-align: center; color: #666; font-style: italic;">Loading live events...</p>
+                </div>
+            </section>
+            <section id="debug-msg" class="debug-msg" style="display: none;"></section>
+        </aside>
+    </main>
 
     <div id="auth-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div class="modal-container">
@@ -76,12 +88,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 
-    <script src="js/firebase_config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/postlist.js"></script>
-    <script src="js/chatroom.js"></script>
-    <script src="js/message.js"></script>
-    <script src="js/profile.js"></script>
+    <script type="module" src="js/firebase_config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/profile.js"></script>
+
 </body>
 </html>

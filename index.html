@@ -13,41 +13,52 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="live.html">Live</a></li>
-                <li><a href="profile.html">Profile</a></li>
+                <li><a id="my-profile-link" href="profile.html">Profile</a></li>
                 <li><a href="postlist.html">Post</a></li>
-                <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li> <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li> <li><a href="about.html">About</a></li>
+                <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li>
+                <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>       
-<div id="auth-section">
+        <div id="auth-section">
             <span id="user-display"></span>
             <button id="btn-login">Login</button>
             <button id="btn-logout" style="display:none;">Logout</button>
         </div>
     </header>
 
-    <main class="main-layout homepage-layout"> <section id="debug-msg" class="debug-msg"></section> <aside class="left-sidebar">
+    <main class="main-layout homepage-layout">
+        <section id="debug-msg" class="debug-msg"></section>
+        <aside class="left-sidebar">
             <section class="card">
                 <h2>Live Updates</h2>
-                <div id="home-live-updates-container"> <p style="text-align: center; color: #666; font-style: italic;">Loading live updates...</p>
-                    </div>
+                <div id="home-live-updates-container">
+                    <p style="text-align: center; color: #666; font-style: italic;">Loading live updates...</p>
+                </div>
             </section>
         </aside>
 
-        <section class="main-content"> <section id="post-creation" class="card" style="display:none; margin-bottom: 20px;">
+        <section class="main-content">
+            <section id="post-creation" class="card" style="display:none; margin-bottom: 20px;">
                 <h2>Create New Post</h2>
-                <input type="text" id="post-title" placeholder="Post Title" required> <textarea id="post-content" placeholder="What's on your mind?" rows="6" required></textarea> <button id="create-post-btn">Create Post</button> </section>
+                <input type="text" id="post-title" placeholder="Post Title" required>
+                <textarea id="post-content" placeholder="What's on your mind?" rows="6" required></textarea>
+                <button id="create-post-btn">Create Post</button>
+            </section>
 
-            <section class="card"> <h2>Recent Posts</h2>
+            <section class="card">
+                <h2>Recent Posts</h2>
                 <div id="posts-container">
                     <p style="text-align: center; color: #666; font-style: italic;">Loading posts...</p>
                 </div>
             </section>
         </section>
-
         <aside class="right-sidebar">
-            <section id="users-list" class="card"> <h3>Members</h3>
-                <div id="home-members-container"> <p style="text-align: center; color: #666; font-style: italic;">Loading members...</p>
+            <section id="users-list" class="card">
+                <h3>Members</h3>
+                <div id="home-members-container">
+                    <p style="text-align: center; color: #666; font-style: italic;">Loading members...</p>
                 </div>
             </section>
         </aside>
@@ -80,7 +91,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script> </body>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
+
+    <script type="module" src="js/firebase_config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/app.js"></script>
+    </body>
 </html>

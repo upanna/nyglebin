@@ -14,7 +14,10 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="live.html">Live</a></li>
                 <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-                <li><a href="postlist.html">Post</a></li> <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li> <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li> <li><a href="about.html">About</a></li>
+                <li><a href="postlist.html">Post</a></li>
+                <li id="nav-chatroom-link" style="display: none;"><a href="chatroom.html">Chatroom</a></li>
+                <li id="nav-message-link" style="display: none;"><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
@@ -26,11 +29,15 @@
     </header>
 
     <main class="main-layout center-content-only">
-        <section id="debug-msg" class="debug-msg"></section> <section class="card">
+        <section id="debug-msg" class="debug-msg"></section>
+        <section class="card">
             <h2>Public Chatroom</h2>
-            <div id="chat-messages-container"> <p style="text-align: center; color: #666; font-style: italic;">Loading messages...</p>
+            <div id="chat-messages-container">
+                <p style="text-align: center; color: #666; font-style: italic;">Loading messages...</p>
             </div>
-            <div id="chat-input-area" style="display:none;"> <textarea id="chat-message-input" placeholder="Type your message..." rows="2"></textarea> <button id="send-chat-btn">Send</button>
+            <div id="chat-input-area" style="display:none;">
+                <textarea id="chat-message-input" placeholder="Type your message..." rows="2"></textarea>
+                <button id="send-chat-btn">Send</button>
             </div>
             <p id="chat-login-msg" style="text-align:center; color:#888; margin-top: 10px; display:block;">
                 Please log in to send messages.
@@ -67,12 +74,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 
-    <script src="js/firebase_config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/postlist.js"></script>
-    <script src="js/chatroom.js"></script>
-    <script src="js/message.js"></script>
-    <script src="js/profile.js"></script>
+    <script type="module" src="js/firebase_config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/chatroom.js"></script>
+
 </body>
 </html>
