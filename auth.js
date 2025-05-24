@@ -1,184 +1,186 @@
 // js/auth.js
-// This script handles authentication logic for the modal
 
+// Firebase service instances (imported from config.js implicitly as they are global)
+// Ensure window.auth and window.db are defined in config.js and loaded before this script.
+// If config.js is properly set up, 'auth' and 'db' will be available directly.
+// For robustness, using window.auth and window.db is safer.
+
+const authModal = document.getElementById('auth-modal');
+const authForm = document.getElementById('auth-form');
+const authTitle = document.getElementById('auth-title');
+const authSubmitBtn = document.getElementById('auth-submit');
+const switchAuthBtn = document.getElementById('switch-auth');
+const authErrorMsg = document.getElementById('auth-error-msg');
+const emailInput = document.getElementById('email-input');
+const passwordInput = document.getElementById('password-input');
+const nameFieldContainer = document.getElementById('name-field-container');
+const nameInput = document.getElementById('name-input');
+const modalCloseBtn = document.querySelector('#auth-modal .modal-close');
+
+let isSignUp = false; // To toggle between login and signup
+
+// Function to display authentication errors
+function displayAuthError(message) {
+    authErrorMsg.textContent = message;
+    authErrorMsg.style.display = 'block';
+    setTimeout(() => {
+        authErrorMsg.style.display = 'none';
+        authErrorMsg.textContent = '';
+    }, 5000);
+}
+
+// Event listener for showing the modal (if a login button exists on the page)
+// This assumes an element with id="btn-login" exists on the page to trigger the modal.
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements from the modal
-    const authModal = document.getElementById('auth-modal');
-    const modalCloseBtn = authModal ? authModal.querySelector('.modal-close') : null;
-    const authTitle = document.getElementById('auth-title');
-    const authForm = document.getElementById('auth-form');
-    const emailInput = document.getElementById('email-input');
-    const passwordInput = document.getElementById('password-input');
-    const nameFieldContainer = document.getElementById('name-field-container');
-    const nameInput = document.getElementById('name-input');
-    const authSubmitBtn = document.getElementById('auth-submit');
-    const switchAuthLink = document.getElementById('switch-auth');
-    const authErrorMsg = document.getElementById('auth-error-msg');
-
-    let isRegisterMode = false; // State to track if we are in login or register mode
-
-    // --- Utility Function to Display Errors ---
-    function displayAuthError(message) {
-        if (authErrorMsg) {
-            authErrorMsg.textContent = message;
-            authErrorMsg.style.display = 'block'; // Ensure error message is visible
-        }
-    }
-
-    // --- Modal Display Logic ---
-    if (modalCloseBtn) {
-        modalCloseBtn.addEventListener('click', () => {
-            if (authModal) authModal.style.display = 'none';
-            resetAuthModal();
-        });
-    }
-
-    // Close modal when clicking outside
-    if (authModal) {
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                authModal.style.display = 'none';
-                resetAuthModal();
-            }
-        });
-    }
-
-    // Reset modal state
-    function resetAuthModal() {
-        isRegisterMode = false;
-        if (authTitle) authTitle.textContent = 'Login';
-        if (authSubmitBtn) authSubmitBtn.textContent = 'Login';
-        if (switchAuthLink) switchAuthLink.textContent = "Don't have an account? Sign Up";
-        if (nameFieldContainer) nameFieldContainer.style.display = 'none';
-        if (emailInput) emailInput.value = '';
-        if (passwordInput) passwordInput.value = '';
-        if (nameInput) nameInput.value = '';
-        if (authErrorMsg) authErrorMsg.textContent = '';
-        if (authErrorMsg) authErrorMsg.style.display = 'none'; // Hide error message on reset
-    }
-
-    // --- Switch between Login and Register ---
-    if (switchAuthLink) {
-        switchAuthLink.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent default link behavior
-            isRegisterMode = !isRegisterMode;
-            if (isRegisterMode) {
-                if (authTitle) authTitle.textContent = 'Sign Up';
-                if (authSubmitBtn) authSubmitBtn.textContent = 'Register';
-                if (switchAuthLink) switchAuthLink.textContent = "Already have an account? Login";
-                if (nameFieldContainer) nameFieldContainer.style.display = 'block'; // Show name field
-            } else {
-                if (authTitle) authTitle.textContent = 'Login';
-                if (authSubmitBtn) authSubmitBtn.textContent = 'Login';
-                if (switchAuthLink) switchAuthLink.textContent = "Don't have an account? Sign Up";
-                if (nameFieldContainer) nameFieldContainer.style.display = 'none'; // Hide name field
-            }
-            if (authErrorMsg) authErrorMsg.textContent = ''; // Clear previous errors
-            if (authErrorMsg) authErrorMsg.style.display = 'none'; // Hide error message
-        });
-    }
-
-    // --- Form Submission (Login/Register) ---
-    if (authForm) {
-        authForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent default form submission
-
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            const displayName = nameInput.value.trim();
-
-            if (authErrorMsg) authErrorMsg.textContent = ''; // Clear previous error messages
-            if (authErrorMsg) authErrorMsg.style.display = 'none';
-
-            if (!email || !password) {
-                displayAuthError('Email and password are required.');
-                return;
-            }
-
-            if (isRegisterMode && !displayName) {
-                displayAuthError('Display name is required for registration.');
-                return;
-            }
-
-            if (authSubmitBtn) authSubmitBtn.disabled = true; // Disable button to prevent multiple clicks
-
-            try {
-                if (isRegisterMode) {
-                    // Register User
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password); // Use global auth
-                    const user = userCredential.user;
-
-                    // Update user profile with display name
-                    await user.updateProfile({ displayName: displayName });
-
-                    // Store user data in Firestore 'users' collection
-                    await db.collection('users').doc(user.uid).set({ // Use global db
-                        name: displayName,
-                        email: email,
-                        photoURL: user.photoURL || '', // Default empty or from updateProfile
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-
-                    console.log("Registration successful! Logging in...");
-                    // User is automatically logged in after registration
-                    if (authModal) authModal.style.display = 'none';
-                    resetAuthModal();
-                } else {
-                    // Login User
-                    await auth.signInWithEmailAndPassword(email, password); // Use global auth
-                    console.log("Logged in successfully!");
-                    if (authModal) authModal.style.display = 'none'; // Hide modal on successful login
-                    resetAuthModal();
-                }
-            } catch (error) {
-                console.error("Authentication Error:", error);
-                let errorMessage = 'An unknown authentication error occurred.';
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'This email is already in use.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'The email address is not valid.';
-                        break;
-                    case 'auth/operation-not-allowed':
-                        errorMessage = 'Email/password accounts are not enabled.';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'The password is too weak. Please use at least 6 characters.';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage = 'This user account has been disabled.';
-                        break;
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect email or password.';
-                        break;
-                    case 'auth/network-request-failed':
-                        errorMessage = 'Network error. Please check your internet connection.';
-                        break;
-                    default:
-                        errorMessage = error.message; // Fallback to Firebase's message
-                        break;
-                }
-                displayAuthError(errorMessage);
-            } finally {
-                if (authSubmitBtn) authSubmitBtn.disabled = false; // Re-enable button
-            }
-        });
-    }
-
-    // --- Global Function to show the Auth Modal ---
-    // This function can be called from other parts of your application (e.g., from a login button click)
-    window.showAuthModal = () => {
-        if (authModal) {
-            resetAuthModal(); // Ensure it starts in login mode
+    const btnLogin = document.getElementById('btn-login');
+    if (btnLogin) {
+        btnLogin.addEventListener('click', () => {
             authModal.style.display = 'block';
-        }
-    };
+            isSignUp = false;
+            authTitle.textContent = 'Login';
+            authSubmitBtn.textContent = 'Login';
+            switchAuthBtn.textContent = "Don't have an account? Sign Up";
+            nameFieldContainer.style.display = 'none'; // Hide name field for login
+            authErrorMsg.textContent = ''; // Clear previous errors
+        });
+    }
+});
 
-    // Example: If you have a login button on your main page, link it to showAuthModal
-    // const btnLogin = document.getElementById('btn-login');
-    // if (btnLogin) {
-    //     btnLogin.addEventListener('click', window.showAuthModal);
-    // }
+
+// Close modal button
+if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', () => {
+        authModal.style.display = 'none';
+        authErrorMsg.textContent = ''; // Clear errors when closing
+    });
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    if (event.target === authModal) {
+        authModal.style.display = 'none';
+        authErrorMsg.textContent = ''; // Clear errors when closing
+    }
+});
+
+// Toggle between Login and Sign Up
+if (switchAuthBtn) {
+    switchAuthBtn.addEventListener('click', () => {
+        isSignUp = !isSignUp;
+        if (isSignUp) {
+            authTitle.textContent = 'Sign Up';
+            authSubmitBtn.textContent = 'Sign Up';
+            switchAuthBtn.textContent = 'Already have an account? Login';
+            nameFieldContainer.style.display = 'block'; // Show name field for signup
+        } else {
+            authTitle.textContent = 'Login';
+            authSubmitBtn.textContent = 'Login';
+            switchAuthBtn.textContent = "Don't have an account? Sign Up";
+            nameFieldContainer.style.display = 'none'; // Hide name field for login
+        }
+        authErrorMsg.textContent = ''; // Clear errors when switching
+    });
+}
+
+// Handle form submission (Login or Sign Up)
+if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        const displayName = nameInput.value;
+
+        if (typeof window.auth === 'undefined' || typeof window.db === 'undefined') {
+            console.error("Firebase Auth or Firestore not initialized. Check config.js and script loading order.");
+            displayAuthError("App initialization error. Please try again later.");
+            return;
+        }
+
+        try {
+            authErrorMsg.textContent = ''; // Clear previous errors
+
+            if (isSignUp) {
+                const userCredential = await window.auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Update user profile with display name
+                if (displayName) {
+                    await user.updateProfile({ displayName: displayName });
+                }
+
+                // Save user data to Firestore
+                await window.db.collection('users').doc(user.uid).set({
+                    email: user.email,
+                    displayName: displayName || user.email, // Default to email if no display name
+                    photoURL: user.photoURL || 'images/default-profile.png', // Set default profile picture
+                    createdAt: window.firebase.firestore.FieldValue.serverTimestamp() // Use FieldValue
+                });
+                window.debugLog("User registered successfully!", "debug-msg"); // Use window.debugLog
+            } else {
+                await window.auth.signInWithEmailAndPassword(email, password);
+                window.debugLog("User logged in successfully!", "debug-msg"); // Use window.debugLog
+            }
+            authModal.style.display = 'none'; // Close modal on success
+            authForm.reset(); // Clear form
+        } catch (error) {
+            console.error('Authentication Error:', error.code, error.message);
+            // Display user-friendly messages for common Firebase auth errors
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    displayAuthError('This email is already in use. Please use a different email or login.');
+                    break;
+                case 'auth/invalid-email':
+                    displayAuthError('The email address is not valid.');
+                    break;
+                case 'auth/operation-not-allowed':
+                    displayAuthError('Email/password accounts are not enabled. Please contact support.');
+                    break;
+                case 'auth/weak-password':
+                    displayAuthError('The password is too weak. Please use a stronger password.');
+                    break;
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    displayAuthError('Incorrect email or password. Please try again.');
+                    break;
+                case 'auth/network-request-failed':
+                    displayAuthError('Network error. Please check your internet connection.');
+                    break;
+                default:
+                    displayAuthError('An unexpected error occurred. Please try again.');
+            }
+        }
+    });
+}
+
+// Handle Logout for pages that have their own logout button (e.g., about.html, contact.html)
+// This is for pages that don't use the main app.js logout listener
+function setupLogoutButton(buttonId, redirectPage = 'index.html') {
+    const btnLogout = document.getElementById(buttonId);
+    if (btnLogout) {
+        btnLogout.addEventListener('click', () => {
+            if (typeof window.auth === 'undefined') {
+                console.error("Firebase Auth not initialized. Cannot logout.");
+                window.debugLog("Logout error: Auth not ready.", "debug-msg"); // Use window.debugLog
+                return;
+            }
+            window.auth.signOut().then(() => {
+                window.debugLog("Logged out successfully!", "debug-msg"); // Use window.debugLog
+                window.location.href = redirectPage; // Redirect to specified page
+            }).catch(error => {
+                console.error('Logout Error:', error);
+                window.debugLog(`Logout failed: ${error.message}`, "debug-msg"); // Use window.debugLog
+            });
+        });
+    }
+}
+
+// Call setupLogoutButton for relevant pages
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for specific logout buttons on different pages
+    setupLogoutButton('btn-logout-about', 'index.html');
+    setupLogoutButton('btn-logout-contact', 'index.html');
+    setupLogoutButton('btn-logout-message', 'index.html');
+    setupLogoutButton('btn-logout-postlist', 'index.html');
+    setupLogoutButton('btn-logout', 'index.html'); // For index.html, profile.html, chat.html, live.html
 });

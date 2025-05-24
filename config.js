@@ -1,10 +1,9 @@
 // js/config.js
+
 // Firebase SDKs များကို compat version များဖြင့် အသုံးပြုနေပါက
 // ဤကဲ့သို့ global scope တွင် ဝန်ဆောင်မှုများကို ထုတ်ဖော်ရန် လိုအပ်ပါသည်။
 
 // Import the functions you need from the SDKs you need
-// (If using modular SDK, these imports would be in each file.
-// But since your HTML files use compat libs, we set globals here.)
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth"; // Auth service ကို import လုပ်ပါ
@@ -39,13 +38,10 @@ window.auth = auth;
 window.db = db;
 window.storage = storage;
 
-// Global Helper Functions (app.js တွင် ခေါ်ဆိုထားသည့် functions များ)
-// (၎င်းတို့ကို config.js တွင် ထည့်သွင်းခြင်းသည် သန့်ရှင်းသော code structure အတွက် အကောင်းဆုံး မဟုတ်သော်လည်း၊
-// လက်ရှိ project setup အရ global အဖြစ်လိုအပ်နေပါက ဤနေရာတွင် ထားနိုင်သည်)
-
+// Global Helper Functions for rendering posts and debug messages
+// These functions are expected to be available globally by app.js
 /**
  * Renders a single post into the specified container element.
- * Assumes 'auth' is globally available for like button logic.
  */
 function renderPost(post, containerElement) {
     const postElement = document.createElement('div');
@@ -91,13 +87,12 @@ function renderPost(post, containerElement) {
     `;
     containerElement.appendChild(postElement);
 
-    // Event Listeners (assuming toggleLike, toggleCommentsSection, addComment are defined in app.js or a separate posts.js)
+    // Event Listeners (assuming toggleLike, toggleCommentsSection, addComment are defined in app.js)
     const likeBtn = postElement.querySelector(`.like-btn[data-post-id="${post.id}"]`);
     if (likeBtn) {
         likeBtn.addEventListener('click', () => {
-            // Ensure toggleLike function is accessible, e.g., defined in app.js or another global script
-            if (typeof toggleLike === 'function') {
-                toggleLike(post.id, likeBtn);
+            if (typeof window.toggleLike === 'function') { // Check if window.toggleLike exists
+                window.toggleLike(post.id, likeBtn);
             } else {
                 console.warn('toggleLike function not found. Likes may not work.');
             }
@@ -107,9 +102,8 @@ function renderPost(post, containerElement) {
     const commentBtn = postElement.querySelector(`.comment-btn[data-post-id="${post.id}"]`);
     if (commentBtn) {
         commentBtn.addEventListener('click', () => {
-             // Ensure toggleCommentsSection function is accessible
-            if (typeof toggleCommentsSection === 'function') {
-                toggleCommentsSection(post.id);
+            if (typeof window.toggleCommentsSection === 'function') { // Check if window.toggleCommentsSection exists
+                window.toggleCommentsSection(post.id);
             } else {
                 console.warn('toggleCommentsSection function not found. Comments section toggle may not work.');
             }
@@ -123,9 +117,8 @@ function renderPost(post, containerElement) {
             const commentInput = addCommentForm.querySelector('.comment-input');
             const commentText = commentInput.value.trim();
             if (commentText) {
-                // Ensure addComment function is accessible
-                if (typeof addComment === 'function') {
-                    addComment(post.id, commentText);
+                if (typeof window.addComment === 'function') { // Check if window.addComment exists
+                    window.addComment(post.id, commentText);
                     commentInput.value = '';
                 } else {
                     console.warn('addComment function not found. Comments may not be added.');
