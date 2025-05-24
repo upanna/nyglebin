@@ -1,196 +1,156 @@
-// config.js
-// This file holds your Firebase configuration and global utility functions
+// js/config.js
+// Firebase SDKs များကို compat version များဖြင့် အသုံးပြုနေပါက
+// ဤကဲ့သို့ global scope တွင် ဝန်ဆောင်မှုများကို ထုတ်ဖော်ရန် လိုအပ်ပါသည်။
 
+// Import the functions you need from the SDKs you need
+// (If using modular SDK, these imports would be in each file.
+// But since your HTML files use compat libs, we set globals here.)
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth"; // Auth service ကို import လုပ်ပါ
+import { getFirestore } from "firebase/firestore"; // Firestore service ကို import လုပ်ပါ
+import { getStorage } from "firebase/storage"; // Storage service ကို import လုပ်ပါ
+
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDWaUMeurndWJXtWV5T5VR_psJrhPT3j1w",
     authDomain: "pagebook-d8147.firebaseapp.com",
     projectId: "pagebook-d8147",
     storageBucket: "pagebook-d8147.firebasestorage.app",
     messagingSenderId: "552581115998",
-    appId: "1:552581115998:web:d7efe9e8502eca064d44cf",
-    measurementId: "G-6CHHSFTD3P"
+    appId: "1:552581115998:web:cb8f6b63516b2c824d44cf",
+    measurementId: "G-1SCBH9NN00"
 };
 
-// Initialize Firebase once and make instances globally available
-// Ensure firebase is loaded via CDN script in HTML BEFORE this script
-try {
-    // Check if Firebase is already initialized to prevent multiple initializations
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-} catch (e) {
-    console.error("Firebase initialization failed:", e);
-    // Consider adding a more visible error to the user if critical
-    // alert("Firebase initialization failed: " + e.message + ". Check your Firebase config and internet connection.");
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
-// Get Firebase service instances
-const auth = firebase.auth();
-const db = firebase.firestore();
-// If you use storage, you would also initialize it here:
-// const storage = firebase.storage();
+// Firebase Services များကို Initialize လုပ်ပြီး Global အဖြစ် ထုတ်ဖော်ပါ
+// ၎င်းတို့သည် app.js, auth.js နှင့် အခြားသော script များမှ အသုံးပြုမည်ဖြစ်သည်။
+const auth = getAuth(app); // Auth ဝန်ဆောင်မှုကို initialize လုပ်ပါ
+const db = getFirestore(app); // Firestore ဝန်ဆောင်မှုကို initialize လုပ်ပါ
+const storage = getStorage(app); // Storage ဝန်ဆောင်မှုကို initialize လုပ်ပါ
 
-// Helper function for logging to a specific debug element
-function debugLog(message, elementId) {
-    console.log(message);
-    // Ensure DOM is loaded before trying to access elements
-    document.addEventListener('DOMContentLoaded', () => {
-        const debugEl = document.getElementById(elementId || 'debug-msg');
-        if (debugEl) {
-            debugEl.textContent = message;
-            debugEl.style.display = 'block'; // Ensure it's visible
-            // Auto-hide after some time for less clutter
-            setTimeout(() => {
-                debugEl.style.display = 'none';
-            }, 5000);
-        }
-    }, { once: true }); // Use { once: true } to only run this listener once
-}
+// Global variables အဖြစ် window object တွင် ထည့်သွင်းပါ
+// ၎င်းတို့သည် compat library များ အသုံးပြုသည့်အခါ အခြား script များမှ တိုက်ရိုက် access လုပ်နိုင်ရန်ဖြစ်သည်။
+window.auth = auth;
+window.db = db;
+window.storage = storage;
 
-// Function to render a single post (reusable for index.js and profile.js)
-function renderPost(post, containerElement, authInstance, dbInstance) {
-    if (!post || !containerElement || !authInstance || !dbInstance) {
-        console.error("renderPost: Missing required arguments.", { post, containerElement, authInstance, dbInstance });
-        debugLog("Error: renderPost called with missing data.", "debug-msg");
-        return;
-    }
+// Global Helper Functions (app.js တွင် ခေါ်ဆိုထားသည့် functions များ)
+// (၎င်းတို့ကို config.js တွင် ထည့်သွင်းခြင်းသည် သန့်ရှင်းသော code structure အတွက် အကောင်းဆုံး မဟုတ်သော်လည်း၊
+// လက်ရှိ project setup အရ global အဖြစ်လိုအပ်နေပါက ဤနေရာတွင် ထားနိုင်သည်)
 
-    const currentUser = authInstance.currentUser; // Get current user from the provided auth instance
-    // Determine if the current user has liked the post
-    const liked = currentUser ? (post.likedBy && post.likedBy.includes(currentUser.uid)) : false;
+/**
+ * Renders a single post into the specified container element.
+ * Assumes 'auth' is globally available for like button logic.
+ */
+function renderPost(post, containerElement) {
+    const postElement = document.createElement('div');
+    postElement.classList.add('post-item');
+    postElement.setAttribute('data-id', post.id); // For like/comment handling
 
-    const postEl = document.createElement('article');
-    postEl.className = 'post';
-    postEl.id = `post-${post.id}`; // Add ID for easier linking/scrolling
+    const userPhoto = post.userPhoto || 'images/default-profile.png';
+    const userName = post.userName || 'Unknown User';
+    const postText = post.text ? `<p>${post.text}</p>` : '';
+    const postImage = post.imageUrl ? `<img src="${post.imageUrl}" alt="Post Image" class="post-image">` : '';
+    // Use optional chaining for timestamp in case it's missing or not a Firestore Timestamp
+    const timestamp = post.timestamp?.toDate ? new Date(post.timestamp.toDate()).toLocaleString() : 'N/A';
 
-    const headerEl = document.createElement('div');
-    headerEl.className = 'post-header';
+    // Check if the current user liked this post (requires auth to be globally available)
+    const currentUser = window.auth.currentUser; // Use window.auth to ensure it's globally accessed
+    const isLiked = currentUser && post.likedBy && post.likedBy.includes(currentUser.uid);
+    const likeButtonClass = isLiked ? 'liked' : '';
 
-    const authorImg = document.createElement('img');
-    authorImg.src = post.userPhoto || `https://i.pravatar.cc/48?u=${post.uid || post.userName}`; // Default avatar
-    authorImg.alt = (post.userName || 'Anonymous') + ' profile photo';
+    postElement.innerHTML = `
+        <div class="post-header">
+            <img src="${userPhoto}" alt="User Photo" class="post-user-photo">
+            <span class="post-user-name">${userName}</span>
+            <span class="post-timestamp">${timestamp}</span>
+        </div>
+        <div class="post-content">
+            ${postText}
+            ${postImage}
+        </div>
+        <div class="post-actions">
+            <button class="like-btn ${likeButtonClass}" data-post-id="${post.id}">
+                <i class="fa-solid fa-heart"></i> <span class="like-count">${post.likes || 0}</span> Likes
+            </button>
+            <button class="comment-btn" data-post-id="${post.id}">
+                <i class="fa-solid fa-comment"></i> <span class="comment-count">${post.comments || 0}</span> Comments
+            </button>
+        </div>
+        <div class="comments-section" id="comments-for-${post.id}" style="display:none;">
+            <form class="add-comment-form" data-post-id="${post.id}">
+                <input type="text" placeholder="Add a comment..." class="comment-input">
+                <button type="submit">Post Comment</button>
+            </form>
+        </div>
+    `;
+    containerElement.appendChild(postElement);
 
-    const authorName = document.createElement('div');
-    authorName.className = 'username';
-    authorName.textContent = post.userName || 'Anonymous';
-    authorName.style.cursor = 'pointer'; // Indicate it's clickable
-    authorName.onclick = () => {
-        window.location.href = `profile.html?uid=${post.uid}`;
-    };
-    headerEl.appendChild(authorImg);
-    headerEl.appendChild(authorName);
-
-    const contentEl = document.createElement('div');
-    contentEl.className = 'post-content';
-    // Display only first ~150 characters for Postlist titles
-    const displayLength = 150;
-    // Check if it's the main posts section or postlist. This check assumes containerElement.id.
-    const isFullPost = containerElement.id !== 'titles-container';
-    contentEl.textContent = isFullPost ? post.text : post.text.substring(0, displayLength) + (post.text.length > displayLength ? '...' : '');
-
-    const actionsEl = document.createElement('div');
-    actionsEl.className = 'post-actions';
-
-    const likeBtn = document.createElement('button');
-    likeBtn.className = 'like-btn'; // Add a class for styling
-    likeBtn.innerHTML = (liked ? '❤️ ' : '🤍 ') + '<span class="like-count">' + (post.likes || 0) + '</span> Likes'; // Combine text and count
-
-    likeBtn.addEventListener('click', async () => {
-        if (!currentUser) {
-            alert('Please login to like posts.');
-            debugLog('Attempted like without login.', 'debug-msg'); // Use global debug-msg
-            return;
-        }
-
-        const postRef = dbInstance.collection('posts').doc(post.id);
-        try {
-            const doc = await postRef.get();
-            if (!doc.exists) {
-                debugLog('Post does not exist to like or unlike.', 'debug-msg');
-                return;
-            }
-            const currentData = doc.data();
-            let updatedLikes = currentData.likes || 0;
-            let updatedLikedBy = currentData.likedBy || [];
-
-            if (updatedLikedBy.includes(currentUser.uid)) {
-                // User already liked, so unlike
-                updatedLikes = Math.max(0, updatedLikes - 1); // Ensure likes don't go below zero
-                updatedLikedBy = updatedLikedBy.filter(uid => uid !== currentUser.uid);
+    // Event Listeners (assuming toggleLike, toggleCommentsSection, addComment are defined in app.js or a separate posts.js)
+    const likeBtn = postElement.querySelector(`.like-btn[data-post-id="${post.id}"]`);
+    if (likeBtn) {
+        likeBtn.addEventListener('click', () => {
+            // Ensure toggleLike function is accessible, e.g., defined in app.js or another global script
+            if (typeof toggleLike === 'function') {
+                toggleLike(post.id, likeBtn);
             } else {
-                // User hasn't liked, so like
-                updatedLikes += 1;
-                updatedLikedBy.push(currentUser.uid);
-            }
-
-            await postRef.update({
-                likes: updatedLikes,
-                likedBy: updatedLikedBy
-            });
-            debugLog('Like status updated successfully!', 'debug-msg');
-        } catch (e) {
-            alert('Failed to update like: ' + e.message);
-            debugLog('Like update error: ' + e.message, 'debug-msg');
-            console.error('Error updating like status:', e);
-        }
-    });
-
-    actionsEl.appendChild(likeBtn);
-
-    // --- Start: Add Edit and Delete Buttons ---
-    if (currentUser && currentUser.uid === post.uid) { // Only show for the post owner
-        const ownerActionsEl = document.createElement('div');
-        ownerActionsEl.className = 'post-owner-actions';
-
-        const editBtn = document.createElement('button');
-        editBtn.className = 'edit-btn';
-        editBtn.textContent = 'Edit';
-        editBtn.addEventListener('click', async () => {
-            const newText = prompt('Edit your post:', post.text);
-            if (newText !== null && newText.trim() !== post.text.trim()) {
-                try {
-                    await dbInstance.collection('posts').doc(post.id).update({
-                        text: newText.trim(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp() // Add an update timestamp
-                    });
-                    debugLog('Post updated successfully!', 'debug-msg');
-                    // Optionally, update the displayed post text immediately without full re-render
-                    contentEl.textContent = newText.trim();
-                } catch (error) {
-                    alert('Error updating post: ' + error.message);
-                    debugLog('Post update error: ' + error.message, 'debug-msg');
-                    console.error('Error updating post:', error);
-                }
+                console.warn('toggleLike function not found. Likes may not work.');
             }
         });
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.addEventListener('click', async () => {
-            if (confirm('Are you sure you want to delete this post?')) {
-                try {
-                    await dbInstance.collection('posts').doc(post.id).delete();
-                    debugLog('Post deleted successfully!', 'debug-msg');
-                    postEl.remove(); // Remove the post element from the DOM
-                } catch (error) {
-                    alert('Error deleting post: ' + error.message);
-                    debugLog('Post delete error: ' + error.message, 'debug-msg');
-                    console.error('Error deleting post:', error);
-                }
-            }
-        });
-
-        ownerActionsEl.appendChild(editBtn);
-        ownerActionsEl.appendChild(deleteBtn);
-        postEl.appendChild(ownerActionsEl); // Add owner actions to the post element
     }
-    // --- End: Add Edit and Delete Buttons ---
 
-    postEl.appendChild(headerEl);
-    postEl.appendChild(contentEl);
-    postEl.appendChild(actionsEl);
+    const commentBtn = postElement.querySelector(`.comment-btn[data-post-id="${post.id}"]`);
+    if (commentBtn) {
+        commentBtn.addEventListener('click', () => {
+             // Ensure toggleCommentsSection function is accessible
+            if (typeof toggleCommentsSection === 'function') {
+                toggleCommentsSection(post.id);
+            } else {
+                console.warn('toggleCommentsSection function not found. Comments section toggle may not work.');
+            }
+        });
+    }
 
-    // Append to container (consider prepending for new posts in a feed)
-    containerElement.appendChild(postEl);
+    const addCommentForm = postElement.querySelector(`.add-comment-form[data-post-id="${post.id}"]`);
+    if (addCommentForm) {
+        addCommentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const commentInput = addCommentForm.querySelector('.comment-input');
+            const commentText = commentInput.value.trim();
+            if (commentText) {
+                // Ensure addComment function is accessible
+                if (typeof addComment === 'function') {
+                    addComment(post.id, commentText);
+                    commentInput.value = '';
+                } else {
+                    console.warn('addComment function not found. Comments may not be added.');
+                }
+            }
+        });
+    }
 }
+window.renderPost = renderPost; // renderPost ကို Global အဖြစ် ထုတ်ဖော်ပါ
+
+
+/**
+ * Displays a debug message on the specified element.
+ */
+function debugLog(message, elementId = 'debug-msg') {
+    const debugElement = document.getElementById(elementId);
+    if (debugElement) {
+        debugElement.textContent = message;
+        debugElement.style.display = 'block';
+        setTimeout(() => {
+            debugElement.style.display = 'none';
+            debugElement.textContent = '';
+        }, 5000); // 5 စက္ကန့်အကြာတွင် ဖျောက်ပါ
+    } else {
+        console.log(`Debug: ${message}`);
+    }
+}
+window.debugLog = debugLog; // debugLog ကို Global အဖြစ် ထုတ်ဖော်ပါ
