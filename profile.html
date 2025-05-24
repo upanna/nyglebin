@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upanna - Profile</title>
-    <link rel="stylesheet" href="style.css"> 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Upanna-Profile</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>Upanna</h1>
         <nav>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a id="my-profile-link" href="profile.html">Profile</a></li>
-            <li><a href="chat.html">Chatroom</a></li>
-            <li><a href="postlist.html">Postlist</a></li>
-            <li><a href="message.html">Message</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="live.html">Live</a></li>
+                <li><a id="my-profile-link" href="profile.html">Profile</a></li>
+                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="postlist.html">Postlist</a></li>
+                <li><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
         </nav>
         <div id="auth-section">
             <span id="user-display"></span>
@@ -30,53 +31,74 @@
     <main class="main-layout">
         <div class="center-content">
             <section id="profile-details" class="card">
-                <h2>My Profile</h2>
                 <div class="profile-header">
-                    <img id="profile-photo" alt="Profile Photo" width="100" height="100" style="border-radius: 50%;">
-                    <input type="file" id="profile-photo-input" accept="image/*" style="display: none;">
-                    <button id="change-photo-btn">Change Photo</button>
-                    <h3 id="profile-name"></h3>
-                    <p id="profile-email"></p>
+                    <img id="profile-photo" src="images/default-profile.png" alt="Profile Photo">
+                    <button id="change-photo-btn" style="display:none;">Change Photo</button>
+                    <input type="file" id="photo-upload-input" accept="image/*" style="display:none;">
                 </div>
+                <h2 id="profile-name"></h2>
+                <p id="profile-email"></p>
+                <button id="edit-profile-btn" style="display:none;">Edit Profile</button>
+            </section>
 
-                <div class="profile-edit-form" style="display:none;">
-                    <label for="edit-name">Display Name:</label>
-                    <input type="text" id="edit-name">
-                    <button id="save-profile-btn">Save Changes</button>
-                    <button id="cancel-edit-btn">Cancel</button>
-                    <p id="profile-update-msg" style="color: green;"></p>
-                </div>
-                <button id="edit-profile-details-btn">Edit Profile</button>
+            <section id="edit-profile-form-section" class="card profile-edit-form" style="display:none;">
+                <h2>Edit Profile</h2>
+                <label for="edit-display-name">Display Name:</label>
+                <input type="text" id="edit-display-name">
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-email">
+                <label for="edit-password">New Password (optional):</label>
+                <input type="password" id="edit-password" placeholder="Leave blank to keep current password">
+                <button id="save-profile-btn">Save Changes</button>
+                <button id="cancel-edit-btn" type="button">Cancel</button>
             </section>
 
             <section id="my-posts" class="card">
                 <h2>My Posts</h2>
-                <p id="no-posts-msg" style="text-align: center; color: #666; font-style: italic; display:none;">You haven't made any posts yet.</p>
                 <div id="my-posts-container">
                     </div>
+                <p id="no-posts-msg" style="text-align: center; color: #666; font-style: italic; display: none;">You haven't made any posts yet.</p>
             </section>
+
+            <section id="my-live-events" class="card">
+                <h2>My Live Event Announcements</h2>
+                <div id="my-live-events-container">
+                    </div>
+                <p id="no-live-events-msg" style="text-align: center; color: #666; font-style: italic; display: none;">You haven't announced any live events yet.</p>
+            </section>
+
         </div>
+        <aside class="right-sidebar">
+            <section id="right-nav" class="card">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="postlist.html">Postlist (All Titles)</a></li>
+                    <li><a href="about.html">About Upanna</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </section>
+        </aside>
     </main>
 
     <div id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div class="modal-container">
-          <button class="modal-close" aria-label="Close">&times;</button>
-          <h2 id="auth-title">Login</h2>
-          <form id="auth-form">
-            <label for="email-input">Email</label>
-            <input type="email" id="email-input" required autocomplete="username" />
-            <label for="password-input">Password</label>
-            <input type="password" id="password-input" required autocomplete="current-password" />
-            <div id="name-field-container" style="display:none;">
-                <label for="name-input">Display Name</label>
-                <input type="text" id="name-input" autocomplete="name" />
-            </div>
-            <button type="submit" id="auth-submit">Login</button>
-            <p id="auth-error-msg" style="color: red;"></p>
-          </form>
-          <div id="switch-auth">Don't have an account? Sign Up</div>
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+                <label for="email-input">Email</label>
+                <input type="email" id="email-input" required autocomplete="username" />
+                <label for="password-input">Password</label>
+                <input type="password" id="password-input" required autocomplete="current-password" />
+                <div id="name-field-container" style="display:none;">
+                    <label for="name-input">Display Name</label>
+                    <input type="text" id="name-input" autocomplete="name" />
+                </div>
+                <button type="submit" id="auth-submit">Login</button>
+                <p id="auth-error-msg" style="color: red;"></p>
+            </form>
+            <div id="switch-auth">Don't have an account? Sign Up</div>
         </div>
-      </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -84,9 +106,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
 
     <script src="js/config.js"></script>
-
-    <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/profile.js"></script>
-</body>
+    <script src="js/app.js"></script> 
+    <script src="js/profile.js"></script> </body>
 </html>

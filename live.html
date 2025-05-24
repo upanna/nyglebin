@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Upanna-Live Stream</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Upanna</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="live.html">Live</a></li>
+                <li><a id="my-profile-link" href="profile.html">Profile</a></li>
+                <li><a href="chat.html">Chatroom</a></li>
+                <li><a href="postlist.html">Postlist</a></li>
+                <li><a href="message.html">Message</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="auth-section">
+            <span id="user-display"></span>
+            <button id="btn-login">Login</button>
+            <button id="btn-logout" style="display:none;">Logout</button>
+        </div>
+    </header>
+
+    <main class="main-layout">
+        <div class="center-content">
+            <section id="live-announcement-form" class="card" style="display:none;">
+                <h2>Announce Your Live Stream</h2>
+                <form id="announce-live-form">
+                    <label for="live-topic">Topic / Subject:</label>
+                    <input type="text" id="live-topic" placeholder="e.g., Daily Reflections, Tech Talk, Q&A" required>
+
+                    <label for="live-datetime">Scheduled Date & Time:</label>
+                    <input type="datetime-local" id="live-datetime" required>
+
+                    <label for="live-location">Location (Optional):</label>
+                    <input type="text" id="live-location" placeholder="e.g., Online, Upanna Office">
+
+                    <label for="live-description">Description:</label>
+                    <textarea id="live-description" placeholder="A brief description of your live session..."></textarea>
+                    
+                    <button type="submit" id="btn-announce-live">Announce Live</button>
+                    <button type="button" id="btn-cancel-announcement" style="background-color: #dc3545; margin-left: 10px;">Cancel</button>
+                </form>
+            </section>
+
+            <section id="live-control" class="card" style="display:none;">
+                <h2>Live Stream Controls</h2>
+                <div id="rtmp-key-container">
+                    <p>Your RTMP URL: <code>rtmp://your-streaming-server/live</code></p>
+                    <label for="rtmp-stream-key">RTMP Stream Key:</label>
+                    <input type="text" id="rtmp-stream-key" placeholder="Enter your unique stream key" required>
+                    <button id="btn-start-stream">Start Stream</button>
+                    <button id="btn-end-stream" style="background-color: #dc3545; display:none;">End Stream</button>
+                </div>
+            </section>
+
+            <section id="live-viewer" class="card" style="display:none;">
+                <h2 id="current-live-title">Live Now: Loading Stream...</h2>
+                <p id="current-live-details"></p>
+                <div id="live-player-container">
+                    <p style="text-align: center; color: #666;">Live stream will appear here when active.</p>
+                </div>
+                
+                <div id="live-comments" class="card">
+                    <h3>Live Chat</h3>
+                    <div id="live-messages-container">
+                        <p style="text-align: center; color: #666; font-style: italic;">No comments yet.</p>
+                    </div>
+                    <div id="live-comment-input-area">
+                        <textarea id="live-comment-input" placeholder="Type your comment here..." rows="1"></textarea>
+                        <button id="send-live-comment-btn">Send</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <aside class="right-sidebar">
+            <section id="upcoming-lives" class="card">
+                <h3>Upcoming Live Events</h3>
+                <div id="upcoming-lives-list">
+                    <p style="text-align: center; color: #666; font-style: italic;">No upcoming live events.</p>
+                </div>
+            </section>
+        </aside>
+    </main>
+
+    <div id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+        <div class="modal-container">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+                <label for="email-input">Email</label>
+                <input type="email" id="email-input" required autocomplete="username" />
+                <label for="password-input">Password</label>
+                <input type="password" id="password-input" required autocomplete="current-password" />
+                <div id="name-field-container" style="display:none;">
+                    <label for="name-input">Display Name</label>
+                    <input type="text" id="name-input" autocomplete="name" />
+                </div>
+                <button type="submit" id="auth-submit">Login</button>
+                <p id="auth-error-msg" style="color: red;"></p>
+            </form>
+            <div id="switch-auth">Don't have an account? Sign Up</div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script> 
+    <script src="js/live.js"></script> </body>
+</html>

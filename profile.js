@@ -1,161 +1,409 @@
-// profile.js
-// Import Firebase instances and helper functions from config.js
-// The variables (auth, db, debugLog, renderPost) are globally available.
+// js/profile.js
 
-// DOM Elements for profile.html
-const profilePhoto = document.getElementById('profile-photo');
-const profileName = document.getElementById('profile-name');
-const profileBio = document.getElementById('profile-bio');
-const postsByUserSection = document.getElementById('user-posts');
-const postsByUserNameSpan = document.getElementById('posts-by-user-name');
-const editProfileBtn = document.getElementById('edit-profile-btn');
-const btnLogoutProfile = document.getElementById('btn-logout-profile');
-const userDisplayProfile = document.getElementById('user-display-profile');
-const myProfileLink = document.getElementById('my-profile-link');
+// Make sure firebase, db, auth, storage are available from config.js
+if (typeof firebase === 'undefined' || typeof db === 'undefined' || typeof auth === 'undefined' || typeof storage === 'undefined') {
+    console.error("Firebase, db, auth, or storage not initialized. Ensure config.js is loaded first.");
+}
 
-// Edit Profile Modal Elements
-const editProfileModal = document.getElementById('edit-profile-modal');
+const profileNameDisplay = document.getElementById('profile-name');
+const profileEmailDisplay = document.getElementById('profile-email');
+const profilePhotoDisplay = document.getElementById('profile-photo');
+const changePhotoBtn = document.getElementById('change-photo-btn');
+const photoUploadInput = document.getElementById('photo-upload-input');
+
+const editProfileFormSection = document.getElementById('edit-profile-form-section');
 const editDisplayNameInput = document.getElementById('edit-display-name');
-const editBioTextarea = document.getElementById('edit-bio');
-// const editPhotoInput = document.getElementById('edit-photo'); // Removed
+const editEmailInput = document.getElementById('edit-email');
+const editPasswordInput = document.getElementById('edit-password');
 const saveProfileBtn = document.getElementById('save-profile-btn');
-const closeModalBtn = editProfileModal.querySelector('.close-button');
-const debugMsgProfile = document.getElementById('debug-msg-profile');
+const cancelEditBtn = document.getElementById('cancel-edit-btn');
+const profileDetailsSection = document.getElementById('profile-details');
+
+const myPostsSection = document.getElementById('my-posts');
+const myPostsContainer = document.getElementById('my-posts-container');
+const noPostsMsg = document.getElementById('no-posts-msg');
+
+// New: Live Events Section
+const myLiveEventsSection = document.getElementById('my-live-events');
+const myLiveEventsContainer = document.getElementById('my-live-events-container');
+const noLiveEventsMsg = document.getElementById('no-live-events-msg');
 
 
-// Logout
-btnLogoutProfile.addEventListener('click', () => {
-    auth.signOut().then(() => {
-        window.location.href = 'index.html';
-    }).catch(error => {
-        debugLog('Logout error: ' + error.message, 'debug-msg-profile');
-        console.error('Logout error:', error);
-    });
-});
+let currentUserId = null; // To store the ID of the profile currently being viewed
 
-auth.onAuthStateChanged(async user => {
+// --- Initialize Profile Page ---
+auth.onAuthStateChanged(user => {
     if (user) {
-        userDisplayProfile.textContent = user.displayName || user.email;
-        btnLogoutProfile.style.display = 'inline-block';
-        myProfileLink.href = `profile.html?uid=${user.uid}`;
+        currentUserId = user.uid;
+        displayUserProfile(user);
+        loadMyPosts(user.uid);
+        loadMyLiveAnnouncements(user.uid); // New: Load user's live announcements
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('uid') || user.uid;
-
-        const userDoc = await db.collection('users').doc(userId).get();
-
-        if (userDoc.exists) {
-            const userData = userDoc.data();
-            // Default pravatar if no photoURL (or if storage not available)
-            profilePhoto.src = userData.photoURL || 'https://i.pravatar.cc/150?u=' + userId;
-            profileName.textContent = userData.displayName || 'N/A';
-            profileBio.textContent = userData.bio || 'No bio yet.';
-            postsByUserNameSpan.textContent = userData.displayName || 'User';
-
-            if (userId === user.uid) {
-                editProfileBtn.style.display = 'block';
-                editProfileBtn.addEventListener('click', () => {
-                    editDisplayNameInput.value = userData.displayName || '';
-                    editBioTextarea.value = userData.bio || '';
-                    editProfileModal.classList.add('active');
-                });
-            } else {
-                editProfileBtn.style.display = 'none';
-            }
-
-            loadUserPosts(userId);
-
-        } else {
-            profileName.textContent = 'User Not Found';
-            profileBio.textContent = 'This user does not exist or has no profile data.';
-            postsByUserNameSpan.textContent = 'User';
-            postsByUserSection.innerHTML = '<p style="text-align:center; color:#666;">This user does not exist or has no posts.</p>';
-            editProfileBtn.style.display = 'none';
+        // Show edit profile button if it's the current user's profile
+        if (window.location.pathname.endsWith('profile.html')) {
+            // If it's the current user's profile page
+            document.getElementById('edit-profile-btn').style.display = 'block';
+            changePhotoBtn.style.display = 'block';
         }
 
     } else {
-        debugLog('User not logged in, redirecting to home...', 'debug-msg-profile');
-        window.location.href = 'index.html';
+        // User is logged out, redirect to home or show login prompt
+        window.location.href = 'index.html'; // Redirect to home page
     }
 });
 
-function loadUserPosts(uid) {
-    postsByUserSection.innerHTML = '<h2>Posts by <span id="posts-by-user-name"></span></h2><p style="font-style:italic; text-align:center;">Loading user posts...</p>';
-    db.collection('posts').where('uid', '==', uid).orderBy('createdAt', 'desc').onSnapshot({
-        next: (snapshot) => {
-            const postsContainer = postsByUserSection;
-            postsContainer.innerHTML = '<h2>Posts by <span id="posts-by-user-name">' + postsByUserNameSpan.textContent + '</span></h2>';
-            if (snapshot.empty) {
-                postsContainer.innerHTML += '<p style="text-align:center; color:#666;">No posts yet from this user.</p>';
-                return;
-            }
-            snapshot.forEach(doc => {
-                const post = doc.data();
-                post.id = doc.id;
-                renderPost(post, postsContainer, auth, db);
-            });
-            debugLog(`Loaded ${snapshot.size} posts for user ${uid}.`, 'debug-msg-profile');
-        },
-        error: (err) => {
-            postsByUserSection.innerHTML = '<p style="text-align:center; color:red;">Failed to load user posts.</p>';
-            debugLog('Error loading user posts: ' + err.message, 'debug-msg-profile');
-            console.error('Error loading user posts:', err);
-        }
-    });
+// --- Display User Profile Info ---
+async function displayUserProfile(user) {
+    if (!user) return;
+
+    profileNameDisplay.textContent = user.displayName || 'N/A';
+    profileEmailDisplay.textContent = user.email || 'N/A';
+    profilePhotoDisplay.src = user.photoURL || 'images/default-profile.png';
+
+    // Populate edit form fields
+    editDisplayNameInput.value = user.displayName || '';
+    editEmailInput.value = user.email || '';
 }
 
-// Edit Profile Modal Logic
-closeModalBtn.addEventListener('click', () => {
-    editProfileModal.classList.remove('active');
+// --- Edit Profile Logic ---
+document.getElementById('edit-profile-btn').addEventListener('click', () => {
+    profileDetailsSection.style.display = 'none';
+    myPostsSection.style.display = 'none';
+    myLiveEventsSection.style.display = 'none'; // Hide live events too
+    editProfileFormSection.style.display = 'block';
 });
 
-editProfileModal.addEventListener('click', (e) => {
-    if (e.target === editProfileModal) {
-        editProfileModal.classList.remove('active');
-    }
+cancelEditBtn.addEventListener('click', () => {
+    editProfileFormSection.style.display = 'none';
+    profileDetailsSection.style.display = 'block';
+    myPostsSection.style.display = 'block';
+    myLiveEventsSection.style.display = 'block'; // Show live events again
 });
 
 saveProfileBtn.addEventListener('click', async () => {
     const user = auth.currentUser;
+    if (!user) return;
+
+    const newDisplayName = editDisplayNameInput.value;
+    const newEmail = editEmailInput.value;
+    const newPassword = editPasswordInput.value;
+
+    try {
+        // Update display name
+        if (newDisplayName && newDisplayName !== user.displayName) {
+            await user.updateProfile({ displayName: newDisplayName });
+            // Also update in users collection
+            await db.collection('users').doc(user.uid).update({ displayName: newDisplayName });
+        }
+
+        // Update email
+        if (newEmail && newEmail !== user.email) {
+            await user.updateEmail(newEmail);
+            // Also update in users collection
+            await db.collection('users').doc(user.uid).update({ email: newEmail });
+        }
+
+        // Update password
+        if (newPassword) {
+            await user.updatePassword(newPassword);
+        }
+
+        alert('Profile updated successfully!');
+        displayUserProfile(user); // Refresh UI
+        cancelEditBtn.click(); // Go back to profile view
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('Failed to update profile: ' + error.message);
+    }
+});
+
+// --- Photo Upload Logic ---
+changePhotoBtn.addEventListener('click', () => {
+    photoUploadInput.click(); // Trigger file input click
+});
+
+photoUploadInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const user = auth.currentUser;
     if (!user) {
-        alert('You must be logged in to edit your profile.');
+        alert('Please log in to change photo.');
         return;
     }
 
-    saveProfileBtn.disabled = true;
-    const newDisplayName = editDisplayNameInput.value.trim();
-    const newBio = editBioTextarea.value.trim();
-    // const newPhotoFile = editPhotoInput.files[0]; // Removed
+    const storageRef = storage.ref();
+    const photoRef = storageRef.child(`profile_photos/${user.uid}/${file.name}`);
 
     try {
-        // Update auth profile
-        await user.updateProfile({
-            displayName: newDisplayName || user.displayName
-        });
+        const snapshot = await photoRef.put(file);
+        const photoURL = await snapshot.ref.getDownloadURL();
 
-        // Update Firestore profile
-        const userDocRef = db.collection('users').doc(user.uid);
-        const updates = {
-            displayName: newDisplayName || user.displayName,
-            bio: newBio
-        };
+        await user.updateProfile({ photoURL: photoURL });
+        // Also update in users collection
+        await db.collection('users').doc(user.uid).update({ photoURL: photoURL });
 
-        // No image upload logic here. Profile photo will remain the default pravatar.
-
-        await userDocRef.update(updates);
-        debugLog('Profile updated successfully.', 'debug-msg-profile');
-
-        // Re-load profile info on the page
-        profileName.textContent = updates.displayName;
-        profileBio.textContent = updates.bio;
-        // if (updates.photoURL) { profilePhoto.src = updates.photoURL; } // Removed as no photo upload
-
-        editProfileModal.classList.remove('active');
+        profilePhotoDisplay.src = photoURL; // Update UI
+        alert('Profile photo updated successfully!');
     } catch (error) {
-        alert('Failed to update profile: ' + error.message);
-        debugLog('Profile update error: ' + error.message, 'debug-msg-profile');
-        console.error('Profile update error:', error);
-    } finally {
-        saveProfileBtn.disabled = false;
+        console.error('Error uploading photo:', error);
+        alert('Failed to upload photo: ' + error.message);
     }
 });
+
+
+// --- Load User's Posts ---
+async function loadMyPosts(userId) {
+    myPostsContainer.innerHTML = '';
+    noPostsMsg.style.display = 'none';
+
+    try {
+        const snapshot = await db.collection('posts')
+            .where('userId', '==', userId)
+            .orderBy('timestamp', 'desc')
+            .get();
+
+        if (snapshot.empty) {
+            noPostsMsg.style.display = 'block';
+        } else {
+            snapshot.forEach(doc => {
+                const post = doc.data();
+                const postId = doc.id;
+                const postElement = createPostElement(post, postId, true); // true indicates it's owner's post
+                myPostsContainer.appendChild(postElement);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading user posts:', error);
+        myPostsContainer.innerHTML = '<p style="color: red;">Error loading posts.</p>';
+    }
+}
+
+// --- Create Post Element (reused from app.js but with edit/delete buttons) ---
+function createPostElement(post, postId, isOwner = false) {
+    const postElement = document.createElement('div');
+    postElement.className = 'post-item';
+    postElement.dataset.id = postId;
+
+    // Format timestamp
+    const timestamp = post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString() : 'Just now';
+
+    let postImageHtml = '';
+    // We are excluding images from posts for now based on user's request.
+    // if (post.imageUrl) {
+    //     postImageHtml = `<img src="${post.imageUrl}" alt="Post Image">`;
+    // }
+
+    let ownerActionsHtml = '';
+    if (isOwner) {
+        ownerActionsHtml = `
+            <div class="post-owner-actions">
+                <button class="edit-btn" data-id="${postId}">Edit</button>
+                <button class="delete-btn" data-id="${postId}">Delete</button>
+            </div>
+        `;
+    }
+
+    postElement.innerHTML = `
+        <div class="post-header">
+            <img src="${post.userPhoto || 'images/default-profile.png'}" alt="User Photo" class="post-user-photo">
+            <span class="post-username">${post.userName}</span>
+            <span class="post-timestamp">${timestamp}</span>
+            ${ownerActionsHtml}
+        </div>
+        <div class="post-content">
+            <p>${post.text.replace(/\n/g, '<br>')}</p>
+            ${postImageHtml}
+        </div>
+        <div class="post-actions">
+            <button class="like-btn" data-id="${postId}">Like <span class="like-count">${post.likes || 0}</span></button>
+            </div>
+    `;
+
+    // Add event listeners for like, edit, delete (if owner)
+    const likeBtn = postElement.querySelector('.like-btn');
+    if (likeBtn) {
+        likeBtn.addEventListener('click', () => toggleLike(postId, likeBtn));
+    }
+
+    if (isOwner) {
+        const deleteBtn = postElement.querySelector('.delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => deletePost(postId));
+        }
+        const editBtn = postElement.querySelector('.edit-btn');
+        if (editBtn) {
+            editBtn.addEventListener('click', () => editPost(postId, post.text));
+        }
+    }
+
+    return postElement;
+}
+
+
+// --- Live Announcements (New Section in Profile) ---
+async function loadMyLiveAnnouncements(userId) {
+    myLiveEventsContainer.innerHTML = '';
+    noLiveEventsMsg.style.display = 'none';
+
+    try {
+        const snapshot = await db.collection('liveAnnouncements')
+            .where('userId', '==', userId)
+            .orderBy('scheduledDateTime', 'desc')
+            .get();
+
+        if (snapshot.empty) {
+            noLiveEventsMsg.style.display = 'block';
+        } else {
+            snapshot.forEach(doc => {
+                const announcement = doc.data();
+                const announcementId = doc.id;
+                const eventElement = document.createElement('div');
+                eventElement.className = 'live-event-profile-item'; // Use a dedicated class for profile display
+                
+                const scheduledTime = announcement.scheduledDateTime ? new Date(announcement.scheduledDateTime.toDate()).toLocaleString() : 'Not set';
+
+                eventElement.innerHTML = `
+                    <h4>${announcement.topic}</h4>
+                    <p><strong>Scheduled:</strong> ${scheduledTime}</p>
+                    <p><strong>Location:</strong> ${announcement.location || 'N/A'}</p>
+                    <p>${announcement.description}</p>
+                    <div class="announcement-actions">
+                        <button class="edit-announcement-btn" data-id="${announcementId}">Edit</button>
+                        <button class="delete-announcement-btn" data-id="${announcementId}">Delete</button>
+                    </div>
+                `;
+                myLiveEventsContainer.appendChild(eventElement);
+
+                // Add event listeners for edit/delete buttons
+                eventElement.querySelector('.edit-announcement-btn').addEventListener('click', () => editLiveAnnouncement(announcementId, announcement));
+                eventElement.querySelector('.delete-announcement-btn').addEventListener('click', () => deleteLiveAnnouncement(announcementId));
+            });
+        }
+    } catch (error) {
+        console.error('Error loading user live announcements:', error);
+        myLiveEventsContainer.innerHTML = '<p style="color: red;">Error loading live announcements.</p>';
+    }
+}
+
+async function editLiveAnnouncement(id, currentData) {
+    const newTopic = prompt('Enter new topic:', currentData.topic);
+    if (newTopic === null) return; // User cancelled
+
+    const newDateTimeStr = prompt('Enter new date & time (YYYY-MM-DDTHH:MM):', currentData.scheduledDateTime.toDate().toISOString().slice(0, 16));
+    if (newDateTimeStr === null) return; // User cancelled
+    const newDateTime = new Date(newDateTimeStr);
+    if (isNaN(newDateTime.getTime())) {
+        alert('Invalid date and time format. Please use YYYY-MM-DDTHH:MM.');
+        return;
+    }
+
+    const newLocation = prompt('Enter new location:', currentData.location || '');
+    if (newLocation === null) return;
+
+    const newDescription = prompt('Enter new description:', currentData.description || '');
+    if (newDescription === null) return;
+
+    try {
+        await db.collection('liveAnnouncements').doc(id).update({
+            topic: newTopic,
+            scheduledDateTime: newDateTime,
+            location: newLocation,
+            description: newDescription
+        });
+        alert('Live announcement updated successfully!');
+        loadMyLiveAnnouncements(auth.currentUser.uid); // Reload list
+    } catch (error) {
+        console.error('Error updating live announcement:', error);
+        alert('Failed to update live announcement: ' + error.message);
+    }
+}
+
+async function deleteLiveAnnouncement(id) {
+    if (!confirm('Are you sure you want to delete this live announcement?')) {
+        return;
+    }
+    try {
+        await db.collection('liveAnnouncements').doc(id).delete();
+        alert('Live announcement deleted successfully!');
+        loadMyLiveAnnouncements(auth.currentUser.uid); // Reload list
+    } catch (error) {
+        console.error('Error deleting live announcement:', error);
+        alert('Failed to delete live announcement: ' + error.message);
+    }
+}
+
+
+// --- Edit Post (Stub - You can implement a proper modal/form) ---
+function editPost(postId, currentText) {
+    const newText = prompt("Edit your post:", currentText);
+    if (newText !== null && newText.trim() !== "") {
+        db.collection('posts').doc(postId).update({
+            text: newText.trim(),
+            editedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            alert('Post updated successfully!');
+            loadMyPosts(auth.currentUser.uid); // Reload posts to show changes
+        }).catch(error => {
+            console.error('Error updating post:', error);
+            alert('Failed to update post: ' + error.message);
+        });
+    }
+}
+
+// --- Delete Post ---
+function deletePost(postId) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        db.collection('posts').doc(postId).delete()
+            .then(() => {
+                alert('Post deleted successfully!');
+                loadMyPosts(auth.currentUser.uid); // Reload posts
+            })
+            .catch(error => {
+                console.error('Error deleting post:', error);
+                alert('Failed to delete post: ' + error.message);
+            });
+    }
+}
+
+// --- Toggle Like (reused from app.js) ---
+async function toggleLike(postId, likeButtonElement) {
+    const user = auth.currentUser;
+    if (!user) {
+        alert('Please log in to like posts.');
+        return;
+    }
+
+    const postRef = db.collection('posts').doc(postId);
+    const likeRef = postRef.collection('likes').doc(user.uid); // Each user has a like doc
+
+    try {
+        const likeDoc = await likeRef.get();
+        const postDoc = await postRef.get();
+        if (!postDoc.exists) return; // Post might have been deleted
+
+        let currentLikes = postDoc.data().likes || 0;
+
+        if (likeDoc.exists) {
+            // User already liked, so unlike
+            await likeRef.delete();
+            currentLikes = Math.max(0, currentLikes - 1); // Ensure likes don't go below 0
+            likeButtonElement.classList.remove('liked');
+        } else {
+            // User has not liked, so like
+            await likeRef.set({
+                userId: user.uid,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            currentLikes += 1;
+            likeButtonElement.classList.add('liked');
+        }
+
+        // Update the main post's like count
+        await postRef.update({ likes: currentLikes });
+        likeButtonElement.querySelector('.like-count').textContent = currentLikes;
+
+    } catch (error) {
+        console.error('Error toggling like:', error);
+    }
+}
