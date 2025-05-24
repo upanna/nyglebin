@@ -1,11 +1,12 @@
 // config.js မှာ Firebase config
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDWaUMeurndWJXtWV5T5VR_psJrhPT3j1w",
+  authDomain: "pagebook-d8147.firebaseapp.com",
+  projectId: "pagebook-d8147",
+  storageBucket: "pagebook-d8147.firebasestorage.app",
+  messagingSenderId: "552581115998",
+  appId: "1:552581115998:web:d7efe9e8502eca064d44cf",
+  measurementId: "G-6CHHSFTD3P"
 };
 
 // Initialize Firebase
